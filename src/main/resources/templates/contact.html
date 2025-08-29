@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Ceylon Trust Bank</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/header.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" th:href="@{/css/footer.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" th:href="@{/css/contact.css(v=${#dates.createNow().time})}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    
+    <!-- CSRF Meta Tags -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf_param" th:content="${_csrf.parameterName}" />
+    <script th:src="@{/js/header.js}" defer></script>
+    <script th:src="@{/js/contact.js}" defer></script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- Welcome Section -->
+<div class="welcome-section">
+    <div class="user-box">
+        <div class="user-icon">
+            <i class="fa-solid fa-headset"></i>
+        </div>
+        <i class="fa-solid fa-star fa-fade" style="color: #FFD43B;"></i>
+    </div>
+
+    <h1>
+        Contact Us
+    </h1>
+    <p th:text="${#dates.format(#dates.createNow(), 'EEEE, MMMM d, yyyy')} + ' • We\'re here to help you'">
+        • We're here to help you
+    </p>
+</div>
+
+<!-- Main Contact Container -->
+<div class="contact-main-container">
+    <!-- Support Ticket Form Section -->
+    <div class="contact-form-section">
+        <div class="form-container">
+            <div class="form-header">
+                <div class="form-icon">
+                    <i class="fa-solid fa-ticket"></i>
+                </div>
+                <h2>Submit Support Request</h2>
+                <p>Need help? Submit a support ticket and our team will get back to you as soon as possible.</p>
+            </div>
+            
+            <form id="supportTicketForm" th:action="@{/contact/submit-ticket}" method="post" novalidate>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="subject"><i class="fa-solid fa-tag"></i> Subject</label>
+                        <input type="text" id="subject" name="subject" required aria-required="true" 
+                               placeholder="Brief description of your inquiry" aria-describedby="subjectHelp">
+                        <small class="helper" id="subjectHelp">Enter a clear, descriptive subject for your inquiry.</small>
+                    </div>
+                    
+                    <div class="form-group span-2">
+                        <label for="message"><i class="fa-solid fa-message"></i> Message</label>
+                        <textarea id="message" name="message" required aria-required="true" rows="6" 
+                                  placeholder="Please provide detailed information about your inquiry..." 
+                                  aria-describedby="messageHelp"></textarea>
+                        <small class="helper" id="messageHelp">Provide as much detail as possible to help us assist you better.</small>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="resetForm()">Clear Form</button>
+                    <button type="submit" class="submit-btn">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        Submit Ticket
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contact Information Section -->
+    <div class="contact-info-section">
+        <div class="info-container">
+            <div class="info-header">
+                <div class="info-icon">
+                    <i class="fa-solid fa-phone"></i>
+                </div>
+                <h2>Other Ways to Reach Us</h2>
+                <p>Prefer to contact us directly? Here are our contact details.</p>
+            </div>
+            
+            <div class="contact-methods">
+                <div class="contact-method">
+                    <div class="method-icon">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <div class="method-content">
+                        <h3>Email Support</h3>
+                        <p>support@ceylontrustbank.lk</p>
+                        <small>24/7 email support</small>
+                    </div>
+                </div>
+                
+                <div class="contact-method">
+                    <div class="method-icon">
+                        <i class="fa-solid fa-phone"></i>
+                    </div>
+                    <div class="method-content">
+                        <h3>Phone Support</h3>
+                        <p>+94 11 234 5678</p>
+                        <small>Mon-Fri: 8:00 AM - 6:00 PM</small>
+                    </div>
+                </div>
+                
+                <div class="contact-method">
+                    <div class="method-icon">
+                        <i class="fa-solid fa-map-marker-alt"></i>
+                    </div>
+                    <div class="method-content">
+                        <h3>Visit Our Branch</h3>
+                        <p>123 Bank Road, Colombo, Sri Lanka</p>
+                        <small>Mon-Fri: 9:00 AM - 4:00 PM</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success/Error Messages -->
+<div id="notification" class="notification" style="display: none;"></div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

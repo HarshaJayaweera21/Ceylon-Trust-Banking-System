@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+    <link rel="shortcut icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+    
+    <link rel="stylesheet" th:href="@{/css/dashboard.css(v=${#dates.createNow().time})}">
+    <link rel="stylesheet" th:href="@{/css/header.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" th:href="@{/css/footer.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script th:src="@{/js/simple-chart.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    
+    <!-- CSRF Meta Tags -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf_param" th:content="${_csrf.parameterName}" />
+    <script th:src="@{/js/header.js}" defer></script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<!-- Welcome section for users with accounts -->
+<div th:if="${!accounts.isEmpty()}" class="welcome-section">
+    <div class="user-box">
+        <div class="user-icon">
+            <i class="fa-regular fa-user"></i>
+        </div>
+        <i class="fa-solid fa-star fa-fade" style="color: #FFD43B;"></i>
+    </div>
+
+    <h1>
+        Welcome back,
+        <span style="color: #ffcc33;"
+              th:text="${user.firstName} + ' ' + ${user.lastName}">
+        </span> !
+    </h1>
+    <p th:text="${#dates.format(#dates.createNow(), 'EEEE, MMMM d, yyyy')} + ' • Here\'s your financial overview'">
+         • Here's your financial overview
+    </p>
+    
+</div>
+
+<!-- Welcome section for users without accounts -->
+<div th:if="${accounts.isEmpty()}" class="welcome-section">
+    <div class="user-box">
+        <div class="user-icon">
+            <i class="fa-regular fa-user"></i>
+        </div>
+        <i class="fa-solid fa-star fa-fade" style="color: #FFD43B;"></i>
+    </div>
+
+    <h1>
+        Welcome,
+        <span style="color: #ffcc33;"
+              th:text="${user.firstName} + ' ' + ${user.lastName}">
+        </span> !
+    </h1>
+    <p th:text="${#dates.format(#dates.createNow(), 'EEEE, MMMM d, yyyy')}">
+        Monday, January 1, 2024
+    </p>
+</div>
+
+<!-- Show accounts and insights -->
+<div class="dashboard-row">
+    <div class="cards-col">
+        <div class="account-cards-container" th:if="${!accounts.isEmpty()}">
+            <div th:each="account : ${accounts}" class="account-card" th:classappend="${account.typeId == 1 ? 'savings-theme' : 'current-theme'}">
+        <div class="card-header">
+            <div th:if="${account.typeId == 1}" class="account-icon1">
+                <i class="fa-solid fa-piggy-bank"></i>
+            </div>
+            <div th:if="${account.typeId == 2}" class="account-icon2">
+                <i class="fa-solid fa-wallet"></i>
+            </div>
+            <div class="account-type">
+                <h3 th:text="${account.typeId == 1 ? 'Savings Account' : 'Current Account'}">Account Type</h3>
+                <p class="account-number" th:text="${account.accountNumber}">Account Number</p>
+            </div>
+            <div class="account-status">
+                <span class="status" th:classappend="${account.status == 'Approved' ? 'status-active' : 'status-pending'}" th:text="${account.status}">Status</span>
+            </div>
+        </div>
+        <div class="card-body">
+            <p class="balance-p">Available Balance</p>
+            <p class="balance-amount" th:text="${#numbers.formatDecimal(account.balance, 1, 'COMMA', 2, 'POINT') + ' LKR'}">0.00 LKR</p>
+        </div>
+        <div class="card-footer">
+
+            <span class="status-type" th:classappend="${account.isActive == true ? 'status-Active' : 'status-Inactive'}" th:text="${account.isActive == true ? 'Active' : 'Inactive'}">Status</span>
+        </div>
+    </div>
+
+            <div th:if="${showAddAccount}" class="account-card add-account-card" onclick="openAddModal()">
+                <div class="card-body">
+                    <i class="fas fa-plus-circle fa-3x"></i>
+                    <p>Add New Account</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <aside th:if="${!accounts.isEmpty()}" class="insights-panel" aria-labelledby="transactionsInsightTitle">
+        <div class="insights-header">
+            <h3 id="transactionsInsightTitle">Transactions Breakdown</h3>
+            <span class="legend-dot deposit"></span><span class="legend-label">Deposited</span>
+            <span class="legend-dot withdrawal"></span><span class="legend-label">Withdrawn</span>
+            <span class="legend-dot transfer"></span><span class="legend-label">Transferred</span>
+        </div>
+        <div class="insights-body">
+            <canvas id="txPie" width="320" height="320" aria-label="Pie chart of transactions" role="img"></canvas>
+        </div>
+    </aside>
+</div>
+
+<!-- Transfer Money Section -->
+<div th:if="${!accounts.isEmpty()}" class="transfer-section">
+    <div class="transfer-container">
+        <div class="transfer-content">
+            <div class="transfer-icon">
+                <i class="fa-solid fa-exchange-alt"></i>
+            </div>
+            <div class="transfer-text">
+                <h3>Transfer Money</h3>
+                <p>Send money to other accounts quickly and securely.</p>
+            </div>
+            <button class="transfer-btn" onclick="openTransferModal()">
+                <i class="fa-solid fa-paper-plane"></i>
+                Transfer Money
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Show welcome message and account opening for users with no accounts -->
+<div th:if="${accounts.isEmpty()}" class="no-accounts-section">
+    <div class="welcome-message">
+        <div class="welcome-icon">
+            <i class="fa-solid fa-piggy-bank"></i>
+        </div>
+        <h2>Start Your Financial Journey with Us</h2>
+        <p>Welcome to Ceylon Trust Bank! Open your first account today and take control of your financial future. Experience secure banking with competitive rates and exceptional service.</p>
+        <button class="open-account-btn" onclick="openAddModal()">
+            <i class="fa-solid fa-plus"></i>
+            Open Your Account
+        </button>
+    </div>
+</div>
+<!-- Only show transaction section if user has accounts -->
+<div th:if="${!accounts.isEmpty()}" class="transaction-part">
+    <div class="transaction-section">
+        <div class="transaction-head">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <h2>Transaction History</h2>
+            <div class="transaction-total">
+                <p th:text="${#lists.size(transactions)} + ' Total'">0 Total</p>
+            </div>
+        </div>
+        <div id="loadingSpinner" class="spinner" style="display: none;">Loading...</div>
+        <table id="transactionTable" th:style="${#lists.isEmpty(transactions)} ? 'display: none' : 'display: table'">
+            <thead>
+            <tr>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Account Type</th>
+            </tr>
+            </thead>
+            <tbody id="transactionBody">
+            <tr th:each="tx, iterStat : ${transactions}" data-page="${iterStat.index / 5 + 1}">
+                <td class="table-type">
+                    <div th:switch="${tx.type}">
+                        <i class="fas fa-arrow-down" th:case="'Deposit'" style="color: #16A249"></i>
+                        <i class="fas fa-arrow-up" th:case="'Withdrawal'" style="color: #F43E5C"></i>
+                        <i class="fas fa-exchange-alt" th:case="'Transfer'" style="color: #3281ED"></i>
+                        <i class="fas fa-question" th:case="*"></i>
+                    </div>
+                    <span th:text="${tx.type}"
+                          th:style="${tx.type == 'Deposit'} ? 'color:#16A249' :
+                          (${tx.type == 'Withdrawal'} ? 'color:#F43E5C' :
+                          (${tx.type == 'Transfer'} ? 'color:#3281ED' : 'color:#6c757d'))">
+                    </span>
+                </td>
+                <td th:text="${tx.createdAt}"></td>
+                <td th:text="${tx.description}"></td>
+                <td th:text="${tx.amount} + ' LKR'"></td>
+                <td th:text="${tx.accountType}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div id="noTransactions" th:style="${#lists.isEmpty(transactions)} ? 'display: block' : 'display: none'" style="text-align: center;">
+            <i class="fas fa-info-circle"></i> No recent transactions
+        </div>
+        <div class="pagination" th:unless="${#lists.isEmpty(transactions)}"></div>
+    </div>
+</div>
+<div id="addAccountModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="openAccountTitle">
+    <div class="modal-content" role="document">
+        <button type="button" class="close" aria-label="Close" onclick="closeAddModal()">&times;</button>
+        <h3 id="openAccountTitle" th:text="'Open New Account for ' + ${user.firstName} + ' ' + ${user.lastName}">Open New Account</h3>
+        <form id="openAccountForm" th:action="@{/dashboard/open-account}" method="post" novalidate>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="typeId">Account Type</label>
+                    <select id="typeId" name="typeId" required aria-required="true">
+                        <option value="">Select Type</option>
+                        <option th:each="type : ${availableAccountTypes}" th:value="${type.typeId}" th:text="${type.typeName}"></option>
+                    </select>
+                    <small class="helper" id="typeHelp">Choose Savings or Current.</small>
+                </div>
+                <div class="form-group">
+                    <label for="nic">Verify NIC</label>
+                    <input type="text" id="nic" name="nic" inputmode="text" autocomplete="off" required placeholder="e.g., 991234567V or 200012345678" aria-describedby="nicHelp">
+                    <small class="helper" id="nicHelp">Enter your Sri Lankan NIC number.</small>
+                </div>
+                <div class="form-group">
+                    <label for="initialDeposit">Initial Deposit (LKR)</label>
+                    <input type="number" id="initialDeposit" name="initialDeposit" min="0" step="0.01" required placeholder="0.00" aria-describedby="depositHelp">
+                    <small class="helper" id="depositHelp">Minimum 0.00 LKR</small>
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="terms" required aria-required="true">
+                    <label for="terms">I agree to the bank’s terms for this account.</label>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" onclick="closeAddModal()">Cancel</button>
+                <button type="submit" class="submit-btn">Open Account</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- Transfer Modal -->
+<div id="transferModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fa-solid fa-exchange-alt"></i> Transfer Money</h2>
+            <span class="close" onclick="closeTransferModal()">&times;</span>
+        </div>
+        <form id="transferForm" class="modal-form" action="/dashboard/transfer" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="sourceAccount">From Account *</label>
+                    <select id="sourceAccount" name="sourceAccount" required aria-required="true" aria-describedby="sourceHelp">
+                        <option value="">Select your account</option>
+                        <option th:each="account : ${accounts}" 
+                                th:value="${account.accountNumber}" 
+                                th:text="${account.accountNumber + ' - ' + (account.typeId == 1 ? 'Savings' : 'Current') + ' (LKR ' + #numbers.formatDecimal(account.balance, 1, 'COMMA', 2, 'POINT') + ')' + (account.status == 'Pending' ? ' [PENDING]' : '')}"
+                                th:disabled="${!account.isActive or account.status == 'Pending'}">
+                        </option>
+                    </select>
+                    <small class="helper" id="sourceHelp">Choose the account to transfer money from.</small>
+                </div>
+                <div class="form-group">
+                    <label for="targetAccount">To Account Number *</label>
+                    <input type="text" id="targetAccount" name="targetAccount" required aria-required="true" 
+                           placeholder="Enter destination account number" aria-describedby="targetHelp">
+                    <small class="helper" id="targetHelp">Enter the account number you want to transfer to.</small>
+                </div>
+                <div class="form-group">
+                    <label for="transferAmount">Amount (LKR) *</label>
+                    <input type="number" id="transferAmount" name="amount" required aria-required="true" 
+                           step="0.01" min="0.01" placeholder="0.00" aria-describedby="amountHelp">
+                    <small class="helper" id="amountHelp">Enter the amount you want to transfer.</small>
+                </div>
+                <div class="form-group">
+                    <label for="transferDescription">Description</label>
+                    <input type="text" id="transferDescription" name="description" 
+                           placeholder="Optional description" aria-describedby="descHelp">
+                    <small class="helper" id="descHelp">Add a note about this transfer (optional).</small>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" onclick="closeTransferModal()">Cancel</button>
+                <button type="submit" class="submit-btn">Transfer Money</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="notification" class="notification" style="position: fixed !important; top: 20px !important; left: 50% !important; transform: translateX(-50%) !important; padding: 16px 24px !important; border-radius: 12px !important; color: #fff !important; font-size: 16px !important; font-weight: 500 !important; display: none !important; z-index: 1000 !important; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important; min-width: 300px !important; max-width: 500px !important; width: auto !important; text-align: center !important; word-wrap: break-word !important; line-height: 1.4 !important;"></div>
+<div th:replace="fragments/footer :: footer"></div>
+
+<script th:src="@{/js/dashboard.js(v=${#dates.createNow().time})}"></script>
+</body>
+</html>

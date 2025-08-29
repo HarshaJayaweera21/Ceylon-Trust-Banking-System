@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Application - Ceylon Trust Bank</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+    <link rel="shortcut icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+    
+    <link rel="stylesheet" th:href="@{/css/header.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" th:href="@{/css/footer.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" th:href="@{/css/loan-application.css(v=${#dates.createNow().time})}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf_param" th:content="${_csrf.parameterName}" />
+    <meta name="context-path" th:content="@{/}" />
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="page">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <div class="user-box">
+            <div class="user-icon">
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+            </div>
+            <i class="fa-solid fa-star fa-fade" style="color: #FFD43B;"></i>
+        </div>
+
+        <h1>
+            Loan Application Center
+        </h1>
+        <p th:text="${#dates.format(#dates.createNow(), 'EEEE, MMMM d, yyyy')} + ' • Apply for loans with competitive rates'">
+            Monday, January 1, 2024 • Apply for loans with competitive rates
+        </p>
+    </div>
+
+    <!-- Account Status Check -->
+    <div th:if="${accounts == null || accounts.isEmpty()}" class="alert-section">
+        <div class="alert-card no-account">
+            <div class="alert-icon">
+                <i class="fa-solid fa-exclamation-triangle"></i>
+            </div>
+            <div class="alert-content">
+                <h3>Account Required</h3>
+                <p>You need at least one active account to apply for a loan. Please open an account first to proceed with your loan application.</p>
+                <a th:href="@{/dashboard}" class="btn btn-primary">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Go to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- No Active Accounts -->
+    <div th:if="${accounts != null && !accounts.isEmpty() && !hasActiveAccount}" class="alert-section">
+        <div class="alert-card inactive-account">
+            <div class="alert-icon">
+                <i class="fa-solid fa-ban"></i>
+            </div>
+            <div class="alert-content">
+                <h3>No Active Accounts</h3>
+                <p>You have accounts but none are currently active. Please ensure at least one account is active to apply for a loan.</p>
+                <a th:href="@{/dashboard}" class="btn btn-primary">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Go to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content - Only show if user has active accounts -->
+    <div th:if="${accounts != null && !accounts.isEmpty() && hasActiveAccount}" class="main-content">
+        <!-- Apply for Loan Section -->
+        <div class="loan-application-section">
+            <div class="section-header">
+                <div class="header-left">
+                    <i class="fa-solid fa-file-contract"></i>
+                    <h2>Apply for a New Loan</h2>
+                    <span class="application-count">Get competitive rates</span>
+                </div>
+            </div>
+
+            <div class="loan-application-card">
+                <div class="loan-content">
+                    <div class="loan-icon">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                    </div>
+                    <div class="loan-text">
+                        <h3>Need Financial Support?</h3>
+                        <p>Apply for a loan with competitive interest rates and flexible repayment terms. Our loan officers will review your application promptly.</p>
+                    </div>
+                    <button class="apply-loan-btn" onclick="openLoanModal()">
+                        <i class="fa-solid fa-file-contract"></i>
+                        Apply for a Loan
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Loan Applications Section -->
+        <div class="my-loans-section">
+            <div class="section-header">
+                <div class="header-left">
+                    <i class="fa-solid fa-list-check"></i>
+                    <h2>My Loan Applications</h2>
+                    <span class="application-count" th:text="${myLoans != null ? #lists.size(myLoans) : 0} + ' Applications'">0 Applications</span>
+                </div>
+            </div>
+
+            <div class="loans-table-container">
+                <table class="loans-table">
+                    <thead>
+                        <tr>
+                            <th>Loan ID</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Interest Rate</th>
+                            <th>Term</th>
+                            <th>Status</th>
+                            <th>Applied Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${myLoans == null || #lists.isEmpty(myLoans)}">
+                            <td colspan="8" class="no-data">
+                                <div class="no-data-content">
+                                    <i class="fa-solid fa-file-contract"></i>
+                                    <p>No loan applications found</p>
+                                    <small>Start by applying for your first loan above</small>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:each="loan : ${myLoans}" th:data-loan-id="${loan.loanId}">
+                            <td th:text="'#' + ${loan.loanId}">#12345</td>
+                            <td th:text="${loan.loanType}">Personal Loan</td>
+                            <td th:text="${#numbers.formatDecimal(loan.amount, 1, 'COMMA', 2, 'POINT') + ' LKR'}">100,000.00 LKR</td>
+                            <td th:text="${loan.interestRate + '%'}">12.5%</td>
+                            <td th:text="${loan.termMonths + ' months'}">24 months</td>
+                            <td>
+                                <span class="status-badge" 
+                                      th:classappend="${loan.status == 'Pending' ? 'status-pending' : 
+                                                      (loan.status == 'Approved' ? 'status-approved' : 
+                                                      (loan.status == 'Rejected' ? 'status-rejected' : 'status-reviewed'))}"
+                                      th:text="${loan.status}">Pending</span>
+                            </td>
+                            <td th:text="${#temporals.format(loan.appliedAt, 'yyyy-MM-dd')}">2024-01-15</td>
+                            <td class="action-buttons">
+                                <button class="btn btn-info" onclick="viewLoanDetails(this)" th:data-loan-id="${loan.loanId}" title="View Details">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Document Upload Section -->
+        <div class="document-upload-section">
+            <div class="section-header">
+                <div class="header-left">
+                    <i class="fa-solid fa-file-upload"></i>
+                    <h2>Upload Documents</h2>
+                    <span class="application-count">Support your application</span>
+                </div>
+            </div>
+
+            <div class="document-upload-card">
+                <div class="upload-instructions">
+                    <div class="instructions-icon">
+                        <i class="fa-solid fa-info-circle"></i>
+                    </div>
+                    <div class="instructions-content">
+                        <h4>Document Upload Guidelines</h4>
+                        <ul>
+                            <li>Upload supporting documents for your loan application</li>
+                            <li>Accepted formats: PDF, JPEG, PNG, GIF</li>
+                            <li>Maximum file size: 10MB per file</li>
+                            <li>Documents will be reviewed by our loan officers</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Loan Selection Area - Only show if customer has loans -->
+                <div th:if="${myLoans != null && !myLoans.isEmpty()}" class="loan-selection-area">
+                    <div class="form-group">
+                        <label for="loanSelect">Select Loan Application *</label>
+                        <select id="loanSelect" class="loan-select-dropdown" required>
+                            <option value="">Choose a loan application...</option>
+                            <option th:each="loan : ${myLoans}" 
+                                    th:value="${loan.loanId}" 
+                                    th:text="'#' + ${loan.loanId} + ' - ' + ${loan.loanType} + ' (' + ${#numbers.formatDecimal(loan.amount, 1, 'COMMA', 2, 'POINT')} + ' LKR)'">#12345 - Personal Loan (100,000.00 LKR)</option>
+                        </select>
+                        <small class="helper">Select the loan application you want to upload documents for</small>
+                    </div>
+                </div>
+
+                <!-- No Loans Message - Show if customer has no loans -->
+                <div th:if="${myLoans == null || myLoans.isEmpty()}" class="no-loans-message">
+                    <div class="no-loans-content">
+                        <i class="fa-solid fa-file-circle-xmark"></i>
+                        <h4>No Loan Applications Found</h4>
+                        <p>You need to apply for a loan before you can upload supporting documents.</p>
+                        <a href="#" onclick="openLoanModal()" class="btn btn-primary">
+                            <i class="fa-solid fa-plus"></i> Apply for a Loan
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Upload Area - Only show if customer has loans -->
+                <div th:if="${myLoans != null && !myLoans.isEmpty()}" class="upload-area">
+                    <div class="upload-zone" id="uploadZone">
+                        <div class="upload-icon">
+                            <i class="fa-solid fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="upload-text">
+                            <h4>Drag & Drop Files Here</h4>
+                            <p>or <button type="button" class="browse-btn" onclick="document.getElementById('fileInput').click()">Browse Files</button></p>
+                            <small>PDF, JPEG, PNG, GIF files up to 10MB each</small>
+                        </div>
+                        <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.gif" style="display: none;">
+                    </div>
+                </div>
+
+                <!-- Uploaded Documents - Only show if customer has loans -->
+                <div th:if="${myLoans != null && !myLoans.isEmpty()}" class="uploaded-documents" id="uploadedDocuments">
+                    <h4><i class="fa-solid fa-folder-open"></i> Uploaded Documents</h4>
+                    <div class="documents-list" id="documentsList">
+                        <div class="no-documents">
+                            <i class="fa-solid fa-file-circle-plus"></i>
+                            <p>Select a loan to view uploaded documents</p>
+                            <small>Choose a loan application from the dropdown above</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Loading Overlay -->
+<div id="uploadLoadingOverlay" class="loading-overlay" style="display: none;">
+    <div class="loading-content">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+        </div>
+        <h3>Uploading Documents...</h3>
+        <p id="uploadProgressText">Please wait while your documents are being uploaded</p>
+        <div class="upload-progress-bar">
+            <div class="upload-progress-fill" id="uploadProgressFill"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Loan Application Modal -->
+<div id="loanModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="loanTitle">
+    <div class="modal-content loan-modal">
+        <div class="modal-header">
+            <div class="modal-icon">
+                <i class="fa-solid fa-file-contract"></i>
+            </div>
+            <div class="modal-title-section">
+                <h3 id="loanTitle">Apply for a Loan</h3>
+                <p id="modalSubtitle">Fill in the details to submit your loan application</p>
+            </div>
+            <button type="button" class="close" onclick="closeLoanModal()" aria-label="Close">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+            <form id="loanForm" th:action="@{/loan-application/apply}" method="post" novalidate>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="loanType">Loan Type *</label>
+                        <select id="loanType" name="loanType" required aria-required="true" onchange="updateInterestRate()">
+                            <option value="">Select Loan Type</option>
+                            <option th:each="entry : ${availableLoanTypes}" 
+                                    th:value="${entry.key}" 
+                                    th:text="${entry.key + ' (' + entry.value + '% p.a.)'}"
+                                    th:data-rate="${entry.value}"></option>
+                        </select>
+                        <small class="helper" id="loanTypeHelp">Choose the type of loan you need.</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loanAmount">Requested Amount (LKR) *</label>
+                        <input type="number" id="loanAmount" name="amount" min="10000" max="10000000" step="1000" required 
+                               placeholder="100000" aria-describedby="amountHelp" onchange="calculateEMI()">
+                        <small class="helper" id="amountHelp">Minimum 10,000 LKR, Maximum 10,000,000 LKR</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="termMonths">Repayment Term *</label>
+                        <select id="termMonths" name="termMonths" required aria-required="true" onchange="calculateEMI()">
+                            <option value="">Select Term</option>
+                            <option value="6">6 Months</option>
+                            <option value="12">12 Months</option>
+                            <option value="24">24 Months</option>
+                            <option value="36">36 Months</option>
+                            <option value="48">48 Months</option>
+                            <option value="60">60 Months</option>
+                        </select>
+                        <small class="helper" id="termHelp">Choose your preferred repayment period.</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="interestRate">Interest Rate (% p.a.)</label>
+                        <input type="number" id="interestRate" readonly step="0.1" placeholder="0.0" aria-describedby="rateHelp">
+                        <small class="helper" id="rateHelp">Interest rate is set based on loan type.</small>
+                    </div>
+                    
+                    <div class="form-group span-2">
+                        <label for="estimatedEMI">Estimated Monthly Installment (EMI)</label>
+                        <div class="emi-display">
+                            <span id="estimatedEMI" class="emi-amount">LKR 0.00</span>
+                            <small class="emi-note">This is an estimate. Final EMI may vary based on approval.</small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group checkbox-group span-2">
+                        <input type="checkbox" id="loanTerms" required aria-required="true">
+                        <label for="loanTerms">I agree to the loan terms and conditions and understand that this application will be reviewed by our loan officers.</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn btn-cancel" onclick="closeLoanModal()">
+                <i class="fa-solid fa-times"></i>
+                Cancel
+            </button>
+            <button type="button" class="btn btn-process" onclick="submitLoanApplication()">
+                <i class="fa-solid fa-paper-plane"></i>
+                Submit Application
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Loan Details Modal -->
+<div id="loanDetailsModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="loanDetailsTitle">
+    <div class="modal-content loan-details-modal">
+        <div class="modal-header">
+            <div class="modal-icon">
+                <i class="fa-solid fa-eye"></i>
+            </div>
+            <div class="modal-title-section">
+                <h3 id="loanDetailsTitle">Loan Application Details</h3>
+                <p id="loanDetailsSubtitle">View your loan application information</p>
+            </div>
+            <button type="button" class="close" onclick="closeLoanDetailsModal()" aria-label="Close">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+            <div id="loanDetailsContent">
+                <!-- Loan details will be populated here -->
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn btn-cancel" onclick="closeLoanDetailsModal()">
+                <i class="fa-solid fa-times"></i>
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/header.js}" defer></script>
+<script th:src="@{/js/loan-application.js(v=${#dates.createNow().time})}" defer></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ceylon Trust Bank</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+    <link rel="shortcut icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+    
+    <!-- Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap" rel="stylesheet">
+    <!-- Custom CSS files -->
+    <link rel="stylesheet" th:href="@{/css/index.css}" />
+    <link rel="stylesheet" th:href="@{/css/header.css}" />
+    <link rel="stylesheet" th:href="@{/css/footer.css}" />
+    <script th:src="@{/js/index.js}" defer></script>
+    <script th:src="@{/js/header.js}" defer></script>
+</head>
+<body>
+<div th:replace="~{fragments/header.html :: header}"></div>
+
+<section class="hero">
+    <div class="aurora">
+        <div class="aurora__item"></div>
+        <div class="aurora__item"></div>
+        <div class="aurora__item"></div>
+        <div class="aurora__item"></div>
+    </div>
+
+    <!-- Floating Elements -->
+    <div class="floating-elements">
+        <div class="floating-icon"><i class="fas fa-coins"></i></div>
+        <div class="floating-icon"><i class="fas fa-shield-alt"></i></div>
+        <div class="floating-icon"><i class="fas fa-mobile-alt"></i></div>
+    </div>
+
+    <h1>Your Trusted Banking Partner in Sri Lanka</h1>
+    <p>Experience modern digital banking with Ceylon Trust Bank. Secure, fast, and designed for your convenience.</p>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+        <div class="scroll-arrow"><i class="fas fa-chevron-down"></i></div>
+    </div>
+</section>
+
+<section class="features">
+    <h2>Why Choose Ceylon Trust Bank?</h2>
+    <p>We combine traditional banking values with modern technology to serve you better.</p>
+    <div class="feature-cards">
+        <div class="card">
+            <i class="fas fa-shield-alt"></i>
+            <h3>Secure Banking</h3>
+            <p>Bank-grade security with SSL encryption and multifactor authentication</p>
+        </div>
+        <div class="card">
+            <i class="fas fa-mobile-alt"></i>
+            <h3>Digital First</h3>
+            <p>Modern banking experience optimized for all your devices</p>
+        </div>
+        <div class="card">
+            <i class="fas fa-exchange-alt"></i>
+            <h3>Easy Transfers</h3>
+            <p>Send money instantly to any account in Sri Lanka</p>
+        </div>
+        <div class="card">
+            <i class="fas fa-percentage"></i>
+            <h3>Competitive Rates</h3>
+            <p>Best-in-market interest rates for savings and fixed deposits</p>
+        </div>
+        <div class="card">
+            <i class="fas fa-user-tie"></i>
+            <h3>Personal Service</h3>
+            <p>Dedicated relationship managers for all account holders</p>
+        </div>
+        <div class="card">
+            <i class="fas fa-clock"></i>
+            <h3>24/7 Access</h3>
+            <p>Bank anytime, anywhere with our always-available platform</p>
+        </div>
+    </div>
+</section>
+
+<div th:replace="~{fragments/footer.html :: footer}"></div>
+</body>
+</html>

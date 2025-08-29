@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Management - Ceylon Bank</title>
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/news-admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script th:src="@{/js/header.js}" defer></script>
+    
+    <!-- CSRF Meta Tags -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf_param" th:content="${_csrf.parameterName}" />
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="fragments/header :: header"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="header-content">
+                    <h1><i class="fas fa-newspaper"></i> News Management</h1>
+                    <p>Manage bank news, announcements, and updates</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="openCreateModal()">
+                        <i class="fas fa-plus"></i> Create News
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-container" th:if="${stats != null}">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 th:text="${stats.totalNews}">0</h3>
+                        <p>Total News</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 th:text="${stats.activeNews}">0</h3>
+                        <p>Active News</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 th:text="${stats.expiredNews}">0</h3>
+                        <p>Expired News</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 th:text="${stats.publicNews}">0</h3>
+                        <p>Public News</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 th:text="${stats.staffNews}">0</h3>
+                        <p>Staff News</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter and Search Section -->
+            <div class="filter-section">
+                <div class="filter-container">
+                    <div class="category-filter">
+                        <label for="categorySelect">Filter by Category:</label>
+                        <select id="categorySelect">
+                            <option value="All">All Categories</option>
+                            <option th:each="category : ${categories}" 
+                                    th:value="${category}" 
+                                    th:text="${category}">Category</option>
+                        </select>
+                    </div>
+                    <div class="status-filter">
+                        <label for="statusSelect">Filter by Status:</label>
+                        <select id="statusSelect">
+                            <option value="All">All Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Expired">Expired</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- News Table -->
+            <div class="table-container">
+                <table id="newsTable" class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Visibility</th>
+                            <th>Status</th>
+                            <th>Posted By</th>
+                            <th>Posted Date</th>
+                            <th>Expiry Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="news : ${news}">
+                            <td th:text="${news.newsId}">1</td>
+                            <td th:text="${news.title}">News Title</td>
+                            <td th:text="${news.category}">Category</td>
+                            <td>
+                                <span th:if="${news.isPublic}" class="visibility-badge public">
+                                    <i class="fas fa-globe"></i> Public
+                                </span>
+                                <span th:unless="${news.isPublic}" class="visibility-badge staff">
+                                    <i class="fas fa-users"></i> Staff
+                                </span>
+                            </td>
+                            <td>
+                                <span th:if="${news.expired}" class="status-badge expired">
+                                    <i class="fas fa-clock"></i> Expired
+                                </span>
+                                <span th:unless="${news.expired}" class="status-badge active">
+                                    <i class="fas fa-check-circle"></i> Active
+                                </span>
+                            </td>
+                            <td th:text="${news.postedBy != null ? news.postedBy.firstName + ' ' + news.postedBy.lastName : 'Unknown'}">Admin</td>
+                            <td th:text="${#temporals.format(news.postedAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 10:00</td>
+                            <td th:text="${news.expiryDate != null ? #temporals.format(news.expiryDate, 'yyyy-MM-dd') : 'Never'}">2025-12-31</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-info view-btn" th:data-news-id="${news.newsId}" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-warning edit-btn" th:data-news-id="${news.newsId}" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger delete-btn" th:data-news-id="${news.newsId}" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- Custom Pagination -->
+                <div class="pagination-container">
+                    <div id="customPagination" class="pagination"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create/Edit News Modal -->
+    <div id="newsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Create News</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="newsForm">
+                    <div class="form-group">
+                        <label for="newsTitle">Title *</label>
+                        <input type="text" id="newsTitle" name="title" required maxlength="100" placeholder="Enter news title">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="newsCategory">Category *</label>
+                        <select id="newsCategory" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="General">General</option>
+                            <option value="Announcement">Announcement</option>
+                            <option value="Update">Update</option>
+                            <option value="Maintenance">Maintenance</option>
+                            <option value="Security">Security</option>
+                            <option value="Service">Service</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="newsContent">Content *</label>
+                        <textarea id="newsContent" name="content" required rows="6" placeholder="Enter news content"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="newsExpiryDate">Expiry Date</label>
+                            <input type="date" id="newsExpiryDate" name="expiryDate" placeholder="Select expiry date (optional)">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newsVisibility">Visibility</label>
+                            <select id="newsVisibility" name="isPublic">
+                                <option value="true">Public (All Users)</option>
+                                <option value="false">Staff Only</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">Create News</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- View News Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content view-modal">
+            <div class="modal-header">
+                <h2>News Details</h2>
+                <span class="close" onclick="closeViewModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="viewContent">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content delete-modal">
+            <div class="modal-header">
+                <h2>Confirm Delete</h2>
+                <span class="close" onclick="closeDeleteModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this news item?</p>
+                <p class="warning-text">This action cannot be undone.</p>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <!-- Footer -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script src="/js/news-admin.js"></script>
+</body>
+</html>
+

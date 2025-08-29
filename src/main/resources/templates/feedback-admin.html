@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Management - Ceylon Bank</title>
+    <link rel="stylesheet" href="/css/feedback-admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/header.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" th:href="@{/css/footer.css(v=${#dates.createNow().time})}"/>
+    <!-- CSRF Meta Tags -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf_param" th:content="${_csrf.parameterName}" />
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="fragments/header :: header"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="header-content">
+                    <h1><i class="fas fa-comments"></i> Feedback Management</h1>
+                    <p>Manage customer feedback and suggestions</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="loadAllFeedback()">
+                        <i class="fas fa-refresh"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-container" th:if="${stats != null}">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-comment"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 th:text="${stats.totalFeedback}">0</h3>
+                        <p>Total Feedback</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 th:text="${stats.recentFeedback}">0</h3>
+                        <p>Recent (7 days)</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 th:text="${stats.todayFeedback}">0</h3>
+                        <p>Today</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="filter-container">
+                    <div class="date-filter">
+                        <label for="dateFilterSelect">Filter by Date:</label>
+                        <select id="dateFilterSelect">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+                    <div class="filter-info">
+                        <span id="filterInfo">Showing all feedback</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feedback Table -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h3><i class="fas fa-list"></i> Feedback List</h3>
+                    <div class="table-actions">
+                        <span id="recordCount">0 records</span>
+                    </div>
+                </div>
+                <table id="feedbackTable" class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Message</th>
+                            <th>Submitted Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="feedback : ${feedback}">
+                            <td th:text="${feedback.feedbackId}">1</td>
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-name" th:text="${feedback.user != null ? feedback.user.firstName + ' ' + feedback.user.lastName : 'Unknown'}">John Doe</div>
+                                    <div class="user-email" th:text="${feedback.user != null ? feedback.user.email : 'Unknown'}">john@example.com</div>
+                                    <div class="user-role" th:text="${feedback.user != null ? feedback.user.role.roleName : 'Unknown'}">Customer</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="message-cell">
+                                    <span th:text="${#strings.abbreviate(feedback.message, 100)}">Feedback message preview...</span>
+                                </div>
+                            </td>
+                            <td th:text="${#temporals.format(feedback.submittedAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 10:00</td>
+                            <td>
+                                <span th:if="${feedback.recent}" class="status-badge recent">
+                                    <i class="fas fa-clock"></i> Recent
+                                </span>
+                                <span th:unless="${feedback.recent}" class="status-badge older">
+                                    <i class="fas fa-history"></i> Older
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-info" onclick="viewFeedback([[${feedback.feedbackId}]])" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteFeedback([[${feedback.feedbackId}]])" title="Delete Feedback">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- Custom Pagination -->
+                <div class="pagination-container">
+                    <div id="customPagination" class="pagination"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Feedback Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content view-modal">
+            <div class="modal-header">
+                <h2>Feedback Details</h2>
+                <span class="close" onclick="closeViewModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="viewContent">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content delete-modal">
+            <div class="modal-header">
+                <h2>Confirm Delete</h2>
+                <span class="close" onclick="closeDeleteModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this feedback?</p>
+                <p class="warning-text">This action cannot be undone.</p>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <!-- Footer -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/header.js}" defer></script>
+    <script src="/js/feedback-admin.js" defer></script>
+</body>
+</html>

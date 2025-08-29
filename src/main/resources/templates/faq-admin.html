@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>FAQ Management - System Administrator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf_param" th:content="${_csrf.parameterName}" />
+    <link rel="stylesheet" th:href="@{/css/faq-admin.css(v=${#dates.createNow().time})}">
+    <link rel="stylesheet" th:href="@{/css/header.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" th:href="@{/css/footer.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="fragments/header :: header"></div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-content">
+                <h1><i class="fa-solid fa-gear"></i> FAQ Management</h1>
+                <p>Create, update, and manage frequently asked questions</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="createFAQBtn">
+                    <i class="fa-solid fa-plus"></i> Create New FAQ
+                </button>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        <div th:if="${error}" class="error-message">
+            <i class="fa-solid fa-exclamation-triangle"></i>
+            <span th:text="${error}">Error message</span>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-container" th:if="${stats != null}">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-question-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 th:text="${stats.totalFAQs}">0</h3>
+                    <p>Total FAQs</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-tags"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 th:text="${stats.totalCategories}">0</h3>
+                    <p>Categories</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 th:text="${stats.recentCount}">0</h3>
+                    <p>Recent Updates</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Management Section -->
+        <div class="faq-management-section">
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="filter-container">
+                    <div class="category-filter">
+                        <label for="categorySelect">Filter by Category:</label>
+                        <select id="categorySelect">
+                            <option value="All">All Categories</option>
+                            <option th:each="category : ${categories}" 
+                                    th:value="${category}" 
+                                    th:text="${category}"
+                                    th:if="${category != 'All'}">Category</option>
+                        </select>
+                    </div>
+                    <div class="filter-info">
+                        <span id="filterInfo">Showing all FAQs</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ List -->
+            <div class="faq-list-section">
+                <!-- Loading State -->
+                <div id="loadingState" class="loading-state" style="display: none;">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <p>Loading FAQs...</p>
+                </div>
+
+                <!-- No Results State -->
+                <div id="noResultsState" class="no-results-state" style="display: none;">
+                    <i class="fa-solid fa-inbox"></i>
+                    <h3>No FAQs Found</h3>
+                    <p>Create your first FAQ or adjust your search criteria.</p>
+                </div>
+
+                <!-- FAQ Table -->
+                <div id="faqTableContainer" class="table-container">
+                    <table class="faq-table">
+                        <thead>
+                            <tr>
+                                <th>Question</th>
+                                <th>Category</th>
+                                <th>Created</th>
+                                <th>Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="faqTableBody">
+                            <!-- FAQ rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create/Edit FAQ Modal -->
+    <div id="faqModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Create New FAQ</h2>
+                <button class="close-btn" id="closeModal">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="faqForm">
+                    <div class="form-group">
+                        <label for="questionInput">Question *</label>
+                        <input type="text" id="questionInput" name="question" required 
+                               placeholder="Enter the question..." maxlength="255">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="answerInput">Answer *</label>
+                        <textarea id="answerInput" name="answer" required 
+                                  placeholder="Enter the answer..." rows="6"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="categoryInput">Category</label>
+                        <input type="text" id="categoryInput" name="category" 
+                               placeholder="Enter category (optional)" maxlength="50">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="saveBtn">
+                            <i class="fa-solid fa-save"></i> Save FAQ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirm Delete</h2>
+                <button class="close-btn" id="closeDeleteModal">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this FAQ?</p>
+                <div class="delete-preview">
+                    <strong id="deleteQuestion">Question will appear here</strong>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                        <i class="fa-solid fa-trash"></i> Delete FAQ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <!-- Scripts -->
+    <script th:src="@{/js/header.js}" defer></script>
+    <script th:src="@{/js/faq-admin.js(v=${#dates.createNow().time})}" defer></script>
+</body>
+</html>

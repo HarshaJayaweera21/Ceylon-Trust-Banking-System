@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Manager Dashboard - Ceylon Trust Bank</title>
+    <link rel="stylesheet" th:href="@{/css/header.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" th:href="@{/css/bank-manager-dashboard.css(v=${#dates.createNow().time})}" />
+    <link rel="stylesheet" th:href="@{/css/footer.css(v=${#dates.createNow().time})}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf_param" th:content="${_csrf.parameterName}" />
+    <meta name="context-path" th:content="@{/}" />
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="page">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <div class="user-box">
+            <div class="user-icon">
+                <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <i class="fa-solid fa-star fa-fade" style="color: #FFD43B;"></i>
+        </div>
+
+        <h1>
+            Welcome back,
+            <span style="color: #ffcc33;"
+                  th:text="${manager.firstName} + ' ' + ${manager.lastName}">
+            </span> !
+        </h1>
+        <p th:text="${#dates.format(#dates.createNow(), 'EEEE, MMMM d, yyyy')} + ' • Bank Manager Dashboard'">
+            Monday, January 1, 2024 • Bank Manager Dashboard
+        </p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-section">
+        <div class="stats-container">
+            <div class="stat-card reviewed-applications">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-file-contract"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="reviewedCount" th:text="${totalApplications}">0</h3>
+                    <p>Reviewed Applications</p>
+                </div>
+            </div>
+            
+            <div class="stat-card total-value">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-sack-dollar"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Rs. <span id="totalValue" th:text="${#numbers.formatDecimal(totalAmount, 1, 'COMMA', 2, 'POINT')}">0.00</span></h3>
+                    <p>Total Loan Value</p>
+                </div>
+            </div>
+            
+            <div class="stat-card high-value-loans">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="highValueCount">0</h3>
+                    <p>High-Value Loans</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- High-Value Loan Applications Section -->
+        <div class="applications-section">
+            <div class="section-header">
+                <div class="header-left">
+                    <i class="fa-solid fa-crown"></i>
+                    <h2>High-Value Loan Applications (> Rs. 500,000)</h2>
+                    <span class="application-count" id="applicationCount" th:text="${totalApplications} + ' Applications'">0 Applications</span>
+                </div>
+            </div>
+
+            <!-- Applications Table -->
+            <div class="applications-table-container">
+                <table id="loanApplicationsTable" class="applications-table">
+                    <thead>
+                        <tr>
+                            <th>Loan ID</th>
+                            <th>Applicant Name</th>
+                            <th>Loan Type</th>
+                            <th>Amount</th>
+                            <th>Interest Rate</th>
+                            <th>Term (Months)</th>
+                            <th>Status</th>
+                            <th>Reviewed By</th>
+                            <th>Applied Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="loanApplicationsBody">
+                        <tr th:if="${#lists.isEmpty(reviewedLoans)}">
+                            <td colspan="10" class="no-data">
+                                <div class="no-data-content">
+                                    <i class="fa-solid fa-crown"></i>
+                                    <p>No high-value loan applications</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:each="loan : ${reviewedLoans}" th:data-loan-id="${loan.loanId}">
+                            <td th:text="${loan.loanId}">#12345</td>
+                            <td th:text="${userMap != null && userMap[loan.userId] != null ? userMap[loan.userId].firstName + ' ' + userMap[loan.userId].lastName : 'Unknown User'}">John Doe</td>
+                            <td th:text="${loan.loanType}">Personal Loan</td>
+                            <td th:text="${#numbers.formatDecimal(loan.amount, 1, 'COMMA', 2, 'POINT') + ' LKR'}">100,000.00 LKR</td>
+                            <td th:text="${loan.interestRate + '%'}">12.5%</td>
+                            <td th:text="${loan.termMonths}">24</td>
+                            <td>
+                                <span class="status-badge status-reviewed" th:text="${loan.status}">Reviewed</span>
+                            </td>
+                            <td th:text="${userMap != null && userMap[loan.reviewedBy] != null ? userMap[loan.reviewedBy].firstName + ' ' + userMap[loan.reviewedBy].lastName : 'Unknown'}">Loan Officer</td>
+                            <td th:text="${#temporals.format(loan.appliedAt, 'yyyy-MM-dd HH:mm')}">2024-01-15 10:30</td>
+                            <td class="action-buttons">
+                                <button class="btn btn-success" onclick="approveLoan(this)" th:data-loan-id="${loan.loanId}">
+                                    <i class="fa-solid fa-check"></i> Approve
+                                </button>
+                                <button class="btn btn-danger" onclick="rejectLoan(this)" th:data-loan-id="${loan.loanId}">
+                                    <i class="fa-solid fa-times"></i> Reject
+                                </button>
+                                <button class="btn btn-info" onclick="reviewLoan(this)" th:data-loan-id="${loan.loanId}">
+                                    <i class="fa-solid fa-eye"></i> Review
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Role Management Section -->
+    <div class="role-management-section">
+        <div class="section-header">
+            <div class="header-left">
+                <i class="fa-solid fa-users-gear"></i>
+                <h2>Staff Role Management</h2>
+                <span class="application-count" id="staffCount" th:text="${staffUsers != null ? #lists.size(staffUsers) : 0} + ' Staff Members'">0 Staff Members</span>
+            </div>
+        </div>
+
+        <!-- Staff Table -->
+        <div class="applications-table-container">
+            <table class="applications-table">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Name</th>
+                        <th>Current Role</th>
+                        <th>Change Role To</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${staffUsers == null || #lists.isEmpty(staffUsers)}">
+                        <td colspan="5" class="no-data">
+                            <div class="no-data-content">
+                                <i class="fa-solid fa-users-gear"></i>
+                                <p>No staff members found</p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:each="user : ${staffUsers}" th:data-user-id="${user.userId}">
+                        <td th:text="${user.userId}">#123</td>
+                        <td th:text="${user.firstName + ' ' + user.lastName}">John Doe</td>
+                        <td>
+                            <span class="role-badge" th:classappend="${'role-' + user.role.roleName.toLowerCase().replace(' ', '-')}" th:text="${user.role.roleName}">Cashier</span>
+                        </td>
+                        <td>
+                            <select class="role-select" th:data-user-id="${user.userId}" th:data-current-role="${user.role.roleName}">
+                                <option value="">Select New Role</option>
+                                <option th:if="${user.role.roleName != 'CustomerServiceExecutive'}" value="CustomerServiceExecutive">Customer Service Executive</option>
+                                <option th:if="${user.role.roleName != 'LoanOfficer'}" value="LoanOfficer">Loan Officer</option>
+                                <option th:if="${user.role.roleName != 'Cashier'}" value="Cashier">Cashier</option>
+                            </select>
+                        </td>
+                        <td class="action-buttons">
+                            <button class="btn btn-primary" onclick="changeUserRole(this)" th:data-user-id="${user.userId}" disabled>
+                                <i class="fa-solid fa-arrows-rotate"></i> Change Role
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
+        <div class="modal-content review-modal">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fa-solid fa-eye"></i>
+                </div>
+                <div class="modal-title-section">
+                    <h3 id="reviewTitle">High-Value Loan Application Review</h3>
+                    <p id="modalSubtitle">Review high-value loan application details</p>
+                </div>
+                <button type="button" class="close" onclick="closeReviewModal()" aria-label="Close">&times;</button>
+            </div>
+            
+            <div class="review-content">
+                <!-- Loan Details -->
+                <div class="review-section">
+                    <h4><i class="fa-solid fa-file-contract"></i> Loan Details</h4>
+                    <div class="review-grid">
+                        <div class="review-item">
+                            <label>Loan ID:</label>
+                            <span id="reviewLoanId">#12345</span>
+                        </div>
+                        <div class="review-item">
+                            <label>Loan Type:</label>
+                            <span id="reviewLoanType">Personal Loan</span>
+                        </div>
+                        <div class="review-item">
+                            <label>Amount:</label>
+                            <span id="reviewAmount">100,000.00 LKR</span>
+                        </div>
+                        <div class="review-item">
+                            <label>Interest Rate:</label>
+                            <span id="reviewInterestRate">12.5%</span>
+                        </div>
+                        <div class="review-item">
+                            <label>Term:</label>
+                            <span id="reviewTerm">24 months</span>
+                        </div>
+                        <div class="review-item">
+                            <label>Applied Date:</label>
+                            <span id="reviewAppliedDate">2024-01-15 10:30</span>
+                        </div>
+                        <div class="review-item emi-highlight">
+                            <label>Monthly EMI:</label>
+                            <span id="reviewEMI" class="emi-amount">4,500.00 LKR</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Profile -->
+                <div class="review-section">
+                    <h4><i class="fa-solid fa-user"></i> Customer Profile</h4>
+                    <div class="customer-info">
+                        <div class="customer-avatar">
+                            <i class="fa-solid fa-user-circle"></i>
+                        </div>
+                        <div class="customer-details">
+                            <h5 id="customerName">John Doe</h5>
+                            <p id="customerEmail">john.doe@email.com</p>
+                            <p id="customerNIC">991234567V</p>
+                            <p id="customerAddress">123 Main Street, Colombo 01</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documents Section -->
+                <div class="review-section">
+                    <h4><i class="fa-solid fa-file-pdf"></i> Supporting Documents</h4>
+                    <div class="documents-list">
+                        <div class="document-item">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            <span>Income Certificate</span>
+                            <button class="btn btn-sm btn-outline">View</button>
+                        </div>
+                        <div class="document-item">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            <span>Bank Statements</span>
+                            <button class="btn btn-sm btn-outline">View</button>
+                        </div>
+                        <div class="document-item">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            <span>Employment Letter</span>
+                            <button class="btn btn-sm btn-outline">View</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manager Comments -->
+                <div class="review-section">
+                    <h4><i class="fa-solid fa-comment"></i> Manager Comments</h4>
+                    <textarea id="officerComments" placeholder="Enter your review comments here..." rows="4"></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancel" onclick="closeReviewModal()">
+                    <i class="fa-solid fa-times"></i>
+                    Close
+                </button>
+                <button type="button" class="btn btn-process" onclick="submitReview()">
+                    <i class="fa-solid fa-save"></i>
+                    Save Review & Comments
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+        <div class="modal-content confirm-modal">
+            <div class="modal-header">
+                <div class="modal-icon" id="confirmIcon">
+                    <i class="fa-solid fa-question-circle"></i>
+                </div>
+                <div class="modal-title-section">
+                    <h3 id="confirmTitle">Confirm Action</h3>
+                    <p id="confirmMessage">Are you sure you want to perform this action?</p>
+                </div>
+                <button type="button" class="close" onclick="closeConfirmModal()" aria-label="Close">&times;</button>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancel" onclick="closeConfirmModal()">
+                    <i class="fa-solid fa-times"></i>
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-process" id="confirmButton" onclick="executeConfirmedAction()">
+                    <i class="fa-solid fa-check"></i>
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+<script th:src="@{/js/header.js}" defer></script>
+<script th:src="@{/js/bank-manager-dashboard.js(v=${#dates.createNow().time})}" defer></script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Sign Up – Step 2</title>
+
+    <link rel="stylesheet" th:href="@{/css/signup.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <!-- CSRF (used later by signup.js on final submit) -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+    <script th:src="@{/js/signup.js}" defer></script>
+</head>
+<body>
+
+<main class="signup-shell" role="main">
+    <aside class="signup-side" aria-hidden="true">
+        <h2>Address details</h2>
+        <p>Provide residential information and date of birth.</p>
+    </aside>
+
+    <section class="signup-main">
+        <div class="step-navigation" aria-label="Registration progress">
+            <button class="step-btn completed" data-step="1">Personal</button>
+            <button class="step-btn active" data-step="2">Address</button>
+            <button class="step-btn" data-step="3">Security</button>
+        </div>
+
+        <h1 class="signup-title">Address & DOB</h1>
+
+        <!-- IDs/names kept exactly for signup.js -->
+        <form id="form-step2" class="signup-form" novalidate>
+            <div class="form-group">
+                <label for="street">Address Line 1 <span class="required">*</span></label>
+                <input type="text" id="street" name="street" placeholder="Enter street address" required />
+                <div class="error" id="err-street"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="street2">Address Line 2</label>
+                <input type="text" id="street2" name="street2" placeholder="Enter address line 2 (optional)" />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="city">City <span class="required">*</span></label>
+                    <input type="text" id="city" name="city" placeholder="Enter city" required />
+                    <div class="error" id="err-city"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="postalCode">Postal Code <span class="required">*</span></label>
+                    <input type="text" id="postalCode" name="postalCode" placeholder="Enter postal code" required />
+                    <div class="error" id="err-postalCode"></div>
+                </div>
+            </div>
+
+            <!-- Calendar picker + hidden/slash-formatted field preserved for JS -->
+            <div class="form-group">
+                <label for="dobPicker">Date of Birth <span class="required">*</span></label>
+                <input type="date" id="dobPicker" aria-describedby="dobHelp" required />
+                <small id="dobHelp" class="muted">The format will be converted to DD/MM/YYYY automatically.</small>
+                <!-- Keep the original dob input for signup.js listeners/validation -->
+                <input type="text" id="dob" name="dob" placeholder="DD/MM/YYYY" style="position:absolute; left:-9999px; width:1px; height:1px;" />
+                <div class="error" id="err-dob"></div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" id="prev2" class="btn-secondary">Previous</button>
+                <button type="button" id="reset2" class="btn-secondary">Clear</button>
+                <button type="button" id="next2" class="btn-primary">Next</button>
+            </div>
+        </form>
+    </section>
+</main>
+
+<!-- Minimal inline sync to keep existing signup.js happy -->
+<script>
+    const picker = document.getElementById('dobPicker');
+    const dobTxt = document.getElementById('dob');
+    if (picker && dobTxt) {
+        picker.addEventListener('input', () => {
+            const v = picker.value; // yyyy-mm-dd
+            if (!v) { dobTxt.value = ''; return; }
+            const [y,m,d] = v.split('-');
+            dobTxt.value = `${d}/${m}/${y}`;
+            // Trigger the same formatting/validation path if signup.js is listening to 'input'
+            const evt = new Event('input', { bubbles: true });
+            dobTxt.dispatchEvent(evt);
+        });
+    }
+</script>
+</body>
+</html>

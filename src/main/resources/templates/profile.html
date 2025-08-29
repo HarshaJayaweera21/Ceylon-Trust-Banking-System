@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Management - Ceylon Trust Bank</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+    <link rel="shortcut icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/header.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" th:href="@{/css/footer.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" th:href="@{/css/profile.css(v=${#dates.createNow().time})}"/>
+    
+    <!-- CSRF Meta Tags -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf_param" th:content="${_csrf.parameterName}" />
+    <script th:src="@{/js/header.js}" defer></script>
+    <script th:src="@{/js/profile.js}" defer></script>
+    
+    <!-- Handle server-side success/error messages -->
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for success message
+            /*[[${success}]]*/ 
+            const successMessage = /*[[${success}]]*/ null;
+            if (successMessage) {
+                showNotification(successMessage, 'success');
+            }
+            
+            // Check for error message
+            /*[[${error}]]*/ 
+            const errorMessage = /*[[${error}]]*/ null;
+            if (errorMessage) {
+                showNotification(errorMessage, 'error');
+            }
+        });
+    </script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="profile-container">
+    <div class="profile-header">
+        <h1><i class="fas fa-user-edit"></i> Profile Management</h1>
+        <p>Manage your personal information and account settings</p>
+    </div>
+
+    <div class="profile-content">
+        <!-- Profile Information Form -->
+        <section class="profile-section">
+            <div class="section-header">
+                <h2><i class="fas fa-user"></i> Profile Information</h2>
+                <button class="edit-btn" id="editProfileBtn">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+            </div>
+            
+            <form id="profileForm" th:action="@{/profile/update}" method="post">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" th:value="${user.username}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" th:value="${user.email}" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nic">NIC Number <span class="field-note">(Cannot be changed)</span></label>
+                        <input type="text" id="nic" name="nic" th:value="${user.nic}" readonly class="nic-field">
+                    </div>
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" th:value="${user.firstName}" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" th:value="${user.lastName}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" id="dob" name="dob" th:value="${user.dateOfBirth}" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="street">Street Address</label>
+                    <input type="text" id="street" name="street" th:value="${user.street}" readonly>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" th:value="${user.city}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="postalCode">Postal Code</label>
+                        <input type="text" id="postalCode" name="postalCode" th:value="${user.postalCode}" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-actions" id="profileActions" style="display: none;">
+                    <button type="button" class="btn-cancel" id="cancelProfileBtn">Cancel</button>
+                    <button type="submit" class="btn-save" id="saveProfileBtn">Save Changes</button>
+                </div>
+                
+                <!-- CSRF Token -->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            </form>
+        </section>
+        
+        <!-- Delete Profile Section -->
+        <section class="profile-section delete-section">
+            <div class="section-header">
+                <h2><i class="fas fa-exclamation-triangle"></i> Account deactivation</h2>
+            </div>
+            
+            <div class="delete-content">
+                <div class="caution-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <strong>Warning:</strong> Deactivating your account will prevent you from logging in. 
+                    Your account data will be preserved but you will not be able to access the system until reactivated by an administrator.
+                </div>
+                
+                <div class="delete-actions">
+                    <button type="button" class="btn-delete" id="deleteProfileBtn">
+                        <i class="fas fa-user-slash"></i>
+                        Deactivate My Account
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<!-- Password Confirmation Modal -->
+<div id="passwordModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-shield-alt"></i> Confirm Account Deactivation</h3>
+            <button type="button" class="modal-close" id="closeModal">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+            <div class="warning-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            
+            <p class="modal-warning">
+                <strong>This action will deactivate your account!</strong><br>
+                You will not be able to log in until an administrator reactivates your account.
+            </p>
+            
+            <form id="passwordForm">
+                <div class="form-group">
+                    <label for="confirmPassword">Enter your password to confirm:</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" 
+                           placeholder="Enter your current password" required>
+                    <div class="password-error" id="passwordError" style="display: none;">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Incorrect password. Please try again.</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div class="modal-footer">
+            <button type="button" class="btn-cancel-modal" id="cancelDeleteBtn">Cancel</button>
+            <button type="button" class="btn-confirm-delete" id="confirmDeleteBtn">
+                <i class="fas fa-user-slash"></i>
+                Deactivate Account
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="notification" class="notification"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

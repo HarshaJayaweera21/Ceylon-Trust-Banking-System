@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Sign Up – Step 1</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+    <link rel="shortcut icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+
+    <link rel="stylesheet" th:href="@{/css/signup.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <!-- CSRF meta names aligned to what signup.js reads -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+    <script th:src="@{/js/signup.js}" defer></script>
+</head>
+<body>
+
+<main class="signup-shell" role="main">
+    <aside class="signup-side" aria-hidden="true">
+        <h2>Personal onboarding</h2>
+        <p>Open a secure digital banking profile in a few quick steps.</p>
+    </aside>
+
+    <section class="signup-main">
+        <div class="step-navigation" aria-label="Registration progress">
+            <button class="step-btn active" data-step="1">Personal</button>
+            <button class="step-btn" data-step="2">Address</button>
+            <button class="step-btn" data-step="3">Security</button>
+        </div>
+
+        <h1 class="signup-title">Personal Information</h1>
+
+        <!-- IDs/names/structure match what signup.js expects -->
+        <form id="form-step1" class="signup-form" novalidate>
+            <div class="form-group">
+                <label for="firstName">First Name <span class="required">*</span></label>
+                <input type="text" id="firstName" name="firstName" placeholder="Enter First Name" required />
+                <div class="error" id="err-firstName"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last Name <span class="required">*</span></label>
+                <input type="text" id="lastName" name="lastName" placeholder="Enter Last Name" required />
+                <div class="error" id="err-lastName"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email <span class="required">*</span></label>
+                <input type="text" id="email" name="email" placeholder="email@example.com" required />
+                <div class="error" id="err-email"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number <span class="required">*</span></label>
+                <div class="phone-input">
+                    <span class="prefix">+94</span>
+                    <input type="text" id="phone" name="phone" maxlength="9" pattern="[0-9]{9}" placeholder="7XXXXXXXX" required />
+                </div>
+                <div class="error" id="err-phone"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="phoneType">Phone Type <span class="required">*</span></label>
+                <div class="phone-type-buttons">
+                    <button type="button" class="phone-type-btn" data-type="Mobile">📱 Mobile</button>
+                    <button type="button" class="phone-type-btn" data-type="Home">🏠 Home</button>
+                    <button type="button" class="phone-type-btn" data-type="Work">💼 Work</button>
+                </div>
+                <input type="hidden" id="phoneType" name="phoneType" required />
+                <div class="error" id="err-phoneType"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="nic">NIC <span class="required">*</span></label>
+                <input type="text" id="nic" name="nic" placeholder="XXXXXXXXXV or XXXXXXXXXXXX" maxlength="12" required />
+                <small class="muted">Format: 9 digits + V/v or 12 digits only</small>
+                <div class="error" id="err-nic"></div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" id="reset1" class="btn-secondary">Clear</button>
+                <button type="button" id="next1" class="btn-primary">Next</button>
+            </div>
+        </form>
+    </section>
+</main>
+
+</body>
+</html>

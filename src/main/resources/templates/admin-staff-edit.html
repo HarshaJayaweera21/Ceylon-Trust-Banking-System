@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit Staff Member - Admin Dashboard</title>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf_param" th:content="${_csrf.parameterName}" />
+    <link rel="stylesheet" th:href="@{/css/admin-customers.css(v=${#dates.createNow().time})}">
+    <link rel="stylesheet" th:href="@{/css/header.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" th:href="@{/css/footer.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Staff Edit Page Styling */
+        .edit-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .edit-header {
+            background: linear-gradient(135deg, #0066cc 0%, #004b99 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px 16px 0 0;
+            margin: -2rem -2rem 2rem -2rem;
+            text-align: center;
+        }
+        
+        .edit-header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .edit-header h1::before {
+            content: "✏️";
+            font-size: 1.5rem;
+        }
+        
+        .edit-header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .form-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+            align-items: start;
+        }
+        
+        .form-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            min-height: fit-content;
+        }
+        
+        .form-section h3 {
+            margin: 0 0 1.5rem 0;
+            color: #374151;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-section h3::before {
+            content: "📋";
+            font-size: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: 100%;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            max-width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #ffffff;
+            box-sizing: border-box;
+            height: 48px;
+            display: block;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .form-group input:hover, .form-group select:hover {
+            border-color: #cbd5e0;
+        }
+        
+        .readonly-info {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+        
+        .readonly-section {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            min-height: fit-content;
+        }
+        
+        .readonly-section h3 {
+            margin: 0 0 1.5rem 0;
+            color: #374151;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #94a3b8;
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .readonly-section h3::before {
+            content: "🔒";
+            font-size: 1rem;
+        }
+        
+        .readonly-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .readonly-item:last-child {
+            border-bottom: none;
+        }
+        
+        .readonly-label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+        
+        .readonly-value {
+            color: #2d3748;
+            font-size: 0.95rem;
+            background: #ffffff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-badge.active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-badge.inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .form-actions {
+            background: #f8fafc;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .btn-save {
+            background: linear-gradient(135deg, #0066cc 0%, #004b99 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.4);
+        }
+        
+        .btn-save::before {
+            content: "💾";
+            font-size: 0.9rem;
+        }
+        
+        .btn-cancel {
+            background: #f1f5f9;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .btn-cancel:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+        
+        .btn-cancel::before {
+            content: "↩️";
+            font-size: 0.9rem;
+        }
+        
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #a7f3d0;
+        }
+        
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #fca5a5;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .edit-container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+            
+            .edit-header {
+                margin: -1rem -1rem 1.5rem -1rem;
+                padding: 1.5rem;
+            }
+            
+            .form-sections {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .btn-save, .btn-cancel {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+    <div class="edit-container">
+        <div class="edit-header">
+            <h1>Edit Staff Member</h1>
+            <p>Update staff member information and details</p>
+        </div>
+        
+        <!-- Success/Error Messages -->
+        <div th:if="${success}" class="success-message">
+            <i class="fas fa-check-circle"></i>
+            <span th:text="${success}">Staff member updated successfully!</span>
+        </div>
+        
+        <div th:if="${error}" class="error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span th:text="${error}">An error occurred while updating.</span>
+        </div>
+        
+        <form th:action="@{|/admin/staff/${user.userId}/edit|}" method="post" class="edit-form">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            
+            <div class="form-sections">
+                <!-- Read-Only Information -->
+                <div class="readonly-section">
+                    <h3>System Information</h3>
+                    <div class="readonly-item">
+                        <span class="readonly-label">User ID</span>
+                        <span class="readonly-value" th:text="${user.userId}">3</span>
+                    </div>
+                    <div class="readonly-item">
+                        <span class="readonly-label">Username</span>
+                        <span class="readonly-value" th:text="${user.username}">admin</span>
+                    </div>
+                    <div class="readonly-item">
+                        <span class="readonly-label">NIC</span>
+                        <span class="readonly-value" th:text="${user.nic}">123456789123</span>
+                    </div>
+                    <div class="readonly-item">
+                        <span class="readonly-label">Role</span>
+                        <span class="readonly-value" th:text="${user.role?.roleName}">System Administrator</span>
+                    </div>
+                    <div class="readonly-item">
+                        <span class="readonly-label">Status</span>
+                        <span class="readonly-value">
+                            <span th:class="${user.isActive} ? 'status-badge active' : 'status-badge inactive'" 
+                                  th:text="${user.isActive} ? 'Active' : 'Inactive'">Active</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Editable Information -->
+                <div class="form-section">
+                    <h3>Personal Information</h3>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" th:value="${user.email}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" th:value="${user.firstName}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" th:value="${user.lastName}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dateOfBirth">Date of Birth</label>
+                        <input type="date" id="dateOfBirth" name="dateOfBirth" th:value="${user.dateOfBirth}">
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Address Information</h3>
+                    <div class="form-group">
+                        <label for="street">Street Address</label>
+                        <input type="text" id="street" name="street" th:value="${user.street}">
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" th:value="${user.city}">
+                    </div>
+                    <div class="form-group">
+                        <label for="postalCode">Postal Code</label>
+                        <input type="text" id="postalCode" name="postalCode" th:value="${user.postalCode}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save">Save Changes</button>
+                <a th:href="@{/admin/staff}" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/header.js}" defer></script>
+</body>
+</html>

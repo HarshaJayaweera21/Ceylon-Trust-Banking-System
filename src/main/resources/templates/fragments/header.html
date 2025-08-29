@@ -1,0 +1,84 @@
+<header xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:fragment="header">
+    <div class="logo">
+        <i class="fas fa-university icon"></i>
+        <div class="logo-text">
+            <h1>Ceylon Trust Bank</h1>
+            <p>Digital Banking Platform</p>
+        </div>
+    </div>
+    
+    <!-- Right Side Container -->
+    <div class="header-right-section">
+        <!-- Auth Buttons Row -->
+        <div class="auth-row" sec:authorize="!isAuthenticated()">
+            <a href="/login" class="sign-in"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+            <a href="/signup" class="sign-up"><i class="fas fa-user-plus"></i> Sign Up</a>
+        </div>
+        
+        <!-- Bottom Row: Bell + Hamburger -->
+        <div class="bottom-row">
+            <!-- Notification Bell -->
+            <div class="notification-container" sec:authorize="isAuthenticated()">
+                <button class="notification-bell" id="notificationBell" onclick="toggleNotificationPopup()">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                </button>
+                <!-- Notification Popup -->
+                <div class="notification-popup" id="notificationPopup" style="display: none;">
+                    <div class="notification-header">
+                        <h3>Notifications</h3>
+                        <button class="mark-all-read" onclick="markAllAsRead()">Mark all as read</button>
+                    </div>
+                    <div class="notification-list" id="notificationList">
+                        <div class="notification-loading">Loading notifications...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hamburger Menu Button -->
+            <button class="hamburger-menu" id="hamburgerMenu" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </div>
+    
+    <nav class="navbar" id="navbar">
+        <div class="navbar-content">
+            <!-- Main Navigation Links -->
+            <a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a>
+            <a href="/profile" class="nav-link" sec:authorize="isAuthenticated()"><i class="fas fa-user-edit"></i> Profile</a>
+            
+            <!-- Customer Links -->
+            <a href="/dashboard" class="nav-link" sec:authorize="hasRole('ROLE_Customer')"><i class="fas fa-user"></i> Account Details</a>
+            <a href="/loan-application" class="nav-link" sec:authorize="hasRole('ROLE_Customer')"><i class="fas fa-hand-holding-dollar"></i> Loan Application</a>
+            
+            <!-- Staff Dashboard Links -->
+            <a href="/cashier/dashboard" class="nav-link" sec:authorize="hasRole('ROLE_Cashier')"><i class="fas fa-gauge"></i> Cashier Dashboard</a>
+            <a href="/loan-officer/dashboard" class="nav-link" sec:authorize="hasRole('ROLE_LoanOfficer')"><i class="fas fa-file-contract"></i> Loan Officer Dashboard</a>
+            <a href="/bank-manager/dashboard" class="nav-link" sec:authorize="hasRole('ROLE_BankManager')"><i class="fas fa-user-tie"></i> Manager Dashboard</a>
+            <a href="/support/dashboard" class="nav-link" sec:authorize="hasRole('ROLE_CustomerServiceExecutive')"><i class="fas fa-headset"></i> Support Dashboard</a>
+            
+        <!-- Admin Management Links -->
+        <a href="/admin/customers" class="nav-link" sec:authorize="hasRole('ROLE_SystemAdministrator')"><i class="fas fa-users"></i> Customer Management</a>
+        <a href="/admin/staff" class="nav-link" sec:authorize="hasRole('ROLE_SystemAdministrator')"><i class="fas fa-user-tie"></i> Staff Management</a>
+        <a href="/admin/faq" class="nav-link" sec:authorize="hasRole('ROLE_SystemAdministrator')"><i class="fas fa-gear"></i> FAQ Management</a>
+        <a href="/admin/news" class="nav-link" sec:authorize="hasRole('ROLE_SystemAdministrator')"><i class="fas fa-newspaper"></i> News Management</a>
+        <a href="/admin/feedback" class="nav-link" sec:authorize="hasRole('ROLE_SystemAdministrator')"><i class="fas fa-comments"></i> Feedback Management</a>
+            
+            <!-- Public Links -->
+            <a href="/faq" class="nav-link"><i class="fas fa-circle-question"></i> FAQ</a>
+            <a href="/news" class="nav-link"><i class="fas fa-newspaper"></i> News</a>
+            <a href="/feedback" class="nav-link"><i class="fas fa-comment-dots"></i> Feedback</a>
+            <a href="/contact" class="nav-link" sec:authorize="hasRole('ROLE_Customer')"><i class="fas fa-envelope"></i> Contact Us</a>
+            
+            <!-- Sign Out Button - Always at bottom -->
+            <div class="sign-out-container" sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post" style="display: block; width: 100%;">
+                    <button type="submit" class="sign-out"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</header>

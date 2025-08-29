@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Denied - Ceylon Trust Bank</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" th:href="@{/css/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/footer.css}"/>
+    <link rel="stylesheet" th:href="@{/css/access-denied.css}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf_param" th:content="${_csrf.parameterName}" />
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="access-denied-container">
+    <section class="access-denied-section">
+        <div class="access-denied-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h2>Access Denied</h2>
+        <p>Sorry, you don't have permission to access this page.</p>
+        <p>If you believe this is an error, please contact your system administrator.</p>
+        <div class="access-denied-actions">
+            <a th:href="@{/}" class="btn btn-primary">
+                <i class="fas fa-home"></i> Return to Home
+            </a>
+            <a th:href="@{/login}" class="btn btn-secondary">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </a>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/header.js}" defer></script>
+</body>
+</html>

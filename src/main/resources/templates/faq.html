@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Frequently Asked Questions - Ceylon Bank</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+    <link rel="shortcut icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+    
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf_param" th:content="${_csrf.parameterName}" />
+    <link rel="stylesheet" th:href="@{/css/faq.css(v=${#dates.createNow().time})}">
+    <link rel="stylesheet" th:href="@{/css/header.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" th:href="@{/css/footer.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script th:src="@{/js/header.js}" defer></script>
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="fragments/header :: header"></div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Welcome section -->
+        <div class="welcome-section">
+            <div class="user-box">
+                <div class="user-icon">
+                    <i class="fa-solid fa-circle-question"></i>
+                </div>
+                <i class="fa-solid fa-star fa-fade" style="color: #FFD43B;"></i>
+            </div>
+
+            <h1>
+                Frequently Asked Questions
+            </h1>
+            <p>
+                Find answers to common questions about our banking services
+            </p>
+        </div>
+
+        <!-- Error Message -->
+        <div th:if="${error}" class="error-message">
+            <i class="fa-solid fa-exclamation-triangle"></i>
+            <span th:text="${error}">Error message</span>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-container" th:if="${stats != null}">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-question-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 th:text="${stats.totalFAQs}">0</h3>
+                    <p>Total FAQs</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-tags"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 th:text="${stats.totalCategories}">0</h3>
+                    <p>Categories</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 th:text="${stats.recentCount}">0</h3>
+                    <p>Recent Updates</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-container">
+                <div class="category-filter">
+                    <label for="categorySelect">Filter by Category:</label>
+                    <select id="categorySelect">
+                        <option value="All">All Categories</option>
+                        <option th:each="category : ${categories}" 
+                                th:value="${category}" 
+                                th:text="${category}"
+                                th:if="${category != 'All'}">Category</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Content -->
+        <div class="faq-content">
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state" style="display: none;">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <p>Loading FAQs...</p>
+            </div>
+
+            <!-- No Results State -->
+            <div id="noResultsState" class="no-results-state" style="display: none;">
+                <i class="fa-solid fa-search"></i>
+                <h3>No FAQs Found</h3>
+                <p>Try adjusting your search terms or category filter.</p>
+            </div>
+
+            <!-- FAQ List -->
+            <div id="faqList" class="faq-list">
+                <!-- FAQs will be populated by JavaScript -->
+            </div>
+
+            <!-- Pagination -->
+            <div id="paginationContainer" class="pagination-container" style="display: none;">
+                <div class="pagination">
+                    <button id="prevPageBtn" class="pagination-btn prev-btn" disabled>
+                        <i class="fa-solid fa-chevron-left"></i>
+                        <span>Previous</span>
+                    </button>
+                    
+                    <div id="pageNumbers" class="page-numbers">
+                        <!-- Page numbers will be generated by JavaScript -->
+                    </div>
+                    
+                    <button id="nextPageBtn" class="pagination-btn next-btn">
+                        <span>Next</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="pagination-info">
+                    <span id="paginationInfo">Showing 1-10 of 100 FAQs</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Modal -->
+        <div id="faqModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modalQuestion">Question</h2>
+                    <button class="close-btn" id="closeModal">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="faq-meta">
+                        <span id="modalCategory" class="category-badge">Category</span>
+                        <span id="modalDate" class="date-info">Date</span>
+                    </div>
+                    <div id="modalAnswer" class="faq-answer">
+                        Answer content will appear here.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <!-- Scripts -->
+    <script th:src="@{/js/faq.js(v=${#dates.createNow().time})}"></script>
+</body>
+</html>

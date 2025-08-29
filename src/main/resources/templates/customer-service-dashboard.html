@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Customer Service Executive Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf_param" th:content="${_csrf.parameterName}" />
+    <link rel="stylesheet" th:href="@{/css/customer-service-dashboard.css(v=${#dates.createNow().time})}">
+    <link rel="stylesheet" th:href="@{/css/header.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" th:href="@{/css/footer.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- Welcome section -->
+<div class="welcome-section">
+    <div class="user-box">
+        <div class="user-icon">
+            <i class="fa-solid fa-headset"></i>
+        </div>
+        <i class="fa-solid fa-star fa-fade" style="color: #FFD43B;"></i>
+    </div>
+
+    <h1>
+        Welcome back,
+        <span style="color: #ffcc33;"
+              th:text="${cse.firstName} + ' ' + ${cse.lastName}">
+        </span> !
+    </h1>
+    <p th:text="${#dates.format(#dates.createNow(), 'EEEE, MMMM d, yyyy')} + ' • Customer Service Executive Dashboard'">
+         • Customer Service Executive Dashboard
+    </p>
+</div>
+
+<!-- Error Message -->
+<div th:if="${error}" class="error-message" style="background: #f8d7da; color: #721c24; padding: 15px; margin: 20px; border-radius: 8px; border: 1px solid #f5c6cb;">
+    <i class="fa-solid fa-exclamation-triangle"></i>
+    <span th:text="${error}">Error message</span>
+</div>
+
+<!-- Statistics Cards -->
+<div class="stats-section">
+    <div class="stats-container">
+        <div class="stat-card open-tickets">
+            <div class="stat-icon">
+                <i class="fa-solid fa-ticket"></i>
+            </div>
+            <div class="stat-content">
+                <h3 th:text="${stats != null ? stats.openTickets : 0}">0</h3>
+                <p>Open Tickets</p>
+            </div>
+        </div>
+        
+        <div class="stat-card resolved-today">
+            <div class="stat-icon">
+                <i class="fa-solid fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+                <h3 th:text="${stats != null ? stats.resolvedToday : 0}">0</h3>
+                <p>Resolved Today</p>
+            </div>
+        </div>
+        
+        <div class="stat-card open-today">
+            <div class="stat-icon">
+                <i class="fa-solid fa-plus-circle"></i>
+            </div>
+            <div class="stat-content">
+                <h3 th:text="${stats != null ? stats.openToday : 0}">0</h3>
+                <p>New Today</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Customer Search Panel -->
+    <div class="search-panel">
+        <div class="panel-header">
+            <i class="fa-solid fa-search"></i>
+            <h2>Quick Customer Search</h2>
+        </div>
+        <div class="search-form">
+            <input type="text" id="customerSearchInput" placeholder="Search by NIC, Account Number, or Name..." />
+            <button id="searchCustomerBtn" class="search-btn">
+                <i class="fa-solid fa-search"></i>
+                Search
+            </button>
+        </div>
+        <div id="customerSearchResults" class="search-results" style="display: none;">
+            <!-- Customer search results will be populated here -->
+        </div>
+    </div>
+
+    <!-- Support Tickets Section -->
+    <div class="tickets-section">
+        <div class="section-header">
+            <div class="header-left">
+                <i class="fa-solid fa-ticket"></i>
+                <h2>Support Tickets</h2>
+                <span class="ticket-count" th:text="${openTickets != null ? #lists.size(openTickets) : 0} + ' Open'">0 Open</span>
+            </div>
+        </div>
+
+        <!-- Open Tickets Table -->
+        <div class="tickets-table-container">
+            <table id="ticketsTable" class="tickets-table">
+                <thead>
+                    <tr>
+                        <th>Ticket ID</th>
+                        <th>Customer</th>
+                        <th>Subject</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="ticketsTableBody">
+                    <tr th:each="ticket : ${openTickets}" th:if="${openTickets != null}">
+                        <td th:text="${ticket.ticketId}">#001</td>
+                        <td th:text="${ticket.user.firstName} + ' ' + ${ticket.user.lastName}">John Doe</td>
+                        <td th:text="${ticket.subject}">Account Issue</td>
+                        <td>
+                            <span class="status-badge open" th:text="${ticket.status}">Open</span>
+                        </td>
+                        <td th:text="${#temporals.format(ticket.createdAt, 'MMM dd, yyyy HH:mm')}">Jan 15, 2024</td>
+                        <td class="actions">
+                            <button class="action-btn view-btn" th:onclick="'viewTicket(' + ${ticket.ticketId} + ')'" title="View Details">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                            <button class="action-btn resolve-btn" th:onclick="'resolveTicket(' + ${ticket.ticketId} + ')'" title="Mark as Resolved">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div id="noTickets" th:if="${openTickets == null || #lists.isEmpty(openTickets)}" class="no-data">
+                <i class="fa-solid fa-inbox"></i>
+                <p>No open tickets at the moment</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Solved Cases Section -->
+    <div class="solved-cases-section">
+        <div class="section-header">
+            <i class="fa-solid fa-check-circle"></i>
+            <h2>Solved Cases</h2>
+            <span class="solved-count" th:text="${allResolvedTickets != null ? #lists.size(allResolvedTickets) : 0} + ' Total'">0 Total</span>
+        </div>
+        
+        <div class="solved-cases-container">
+            <div th:each="ticket : ${allResolvedTickets}" th:if="${allResolvedTickets != null}" class="solved-case-card" th:data-ticket-id="${ticket.ticketId}">
+                <div class="case-header">
+                    <span class="case-id" th:text="'#' + ${ticket.ticketId}">#001</span>
+                    <div class="case-header-right">
+                        <span class="case-status resolved" th:text="${ticket.status}">Resolved</span>
+                        <button class="delete-case-btn" th:onclick="'deleteSolvedCase(' + ${ticket.ticketId} + ')'" title="Delete this solved case">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="case-content">
+                    <h4 th:text="${ticket.subject}">Account Issue</h4>
+                    <p th:text="${ticket.user.firstName} + ' ' + ${ticket.user.lastName}">John Doe</p>
+                    <small th:text="'Resolved on ' + ${#temporals.format(ticket.resolvedAt, 'MMM dd, yyyy HH:mm')}">Resolved on Jan 15, 2024</small>
+                </div>
+            </div>
+            
+            <div th:if="${allResolvedTickets == null || #lists.isEmpty(allResolvedTickets)}" class="no-data">
+                <i class="fa-solid fa-check-circle"></i>
+                <p>No resolved tickets yet</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ticket Details Modal -->
+<div id="ticketDetailsModal" class="modal">
+    <div class="modal-content">
+        <button type="button" class="close" onclick="closeTicketModal()">&times;</button>
+        <h3>Ticket Details</h3>
+        <div id="ticketDetailsContent">
+            <!-- Ticket details will be populated here -->
+        </div>
+    </div>
+</div>
+
+<!-- Customer Details Modal -->
+<div id="customerDetailsModal" class="modal">
+    <div class="modal-content">
+        <button type="button" class="close" onclick="closeCustomerModal()">&times;</button>
+        <h3>Customer Details</h3>
+        <div id="customerDetailsContent">
+            <!-- Customer details will be populated here -->
+        </div>
+    </div>
+</div>
+
+<!-- Custom Confirmation Modal -->
+<div id="confirmationModal" class="modal">
+    <div class="modal-content confirmation-modal">
+        <div class="confirmation-header">
+            <div class="confirmation-icon">
+                <i class="fa-solid fa-question-circle"></i>
+            </div>
+            <h3>Confirm Action</h3>
+        </div>
+        <div class="confirmation-body">
+            <p id="confirmationMessage">Are you sure you want to mark this ticket as resolved?</p>
+        </div>
+        <div class="confirmation-actions">
+            <button type="button" class="btn-cancel" onclick="closeConfirmationModal()">Cancel</button>
+            <button type="button" class="btn-confirm" id="confirmButton">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<div id="notification" class="notification"></div>
+
+<div th:replace="fragments/footer :: footer"></div>
+<script th:src="@{/js/header.js}" defer></script>
+<script th:src="@{/js/customer-service-dashboard.js(v=${#dates.createNow().time})}" defer></script>
+</body>
+</html>

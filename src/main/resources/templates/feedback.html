@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Ceylon Bank</title>
+    <link rel="stylesheet" th:href="@{/css/feedback.css(v=${#dates.createNow().time})}">
+    <link rel="stylesheet" th:href="@{/css/header.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" th:href="@{/css/footer.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script th:src="@{/js/header.js}" defer></script>
+    
+    <!-- CSRF Meta Tags -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf_param" th:content="${_csrf.parameterName}" />
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="fragments/header :: header"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Welcome Section - Dashboard Style -->
+        <div class="welcome-section">
+            <div class="user-box">
+                <div class="user-icon">
+                    <i class="fa-regular fa-comment"></i>
+                </div>
+                <i class="fa-solid fa-star fa-fade" style="color: #FFD43B;"></i>
+            </div>
+
+            <h1>
+                <span style="color: #ffcc33;">Feedback</span>
+            </h1>
+            <p>Share your thoughts and suggestions with us</p>
+        </div>
+
+        <div class="container">
+
+            <!-- Statistics Cards -->
+            <div class="stats-container" th:if="${stats != null}">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-comment"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 th:text="${stats.userFeedbackCount}">0</h3>
+                        <p>Your Feedback</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feedback Form Section -->
+            <div class="feedback-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-paper-plane"></i> Submit Feedback</h2>
+                    <p>We value your opinion and would love to hear from you</p>
+                </div>
+                
+                <div class="feedback-form-container">
+                    <form id="feedbackForm" class="feedback-form">
+                        <div class="form-group">
+                            <label for="feedbackMessage">Your Message *</label>
+                            <textarea 
+                                id="feedbackMessage" 
+                                name="message" 
+                                required 
+                                rows="6" 
+                                placeholder="Please share your feedback, suggestions, or concerns. Your input helps us improve our services."
+                                maxlength="2000"></textarea>
+                            <div class="char-counter">
+                                <span id="charCount">0</span> / 2000 characters
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="clearForm()">
+                                <i class="fas fa-eraser"></i> Clear
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <i class="fas fa-paper-plane"></i> Submit Feedback
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Feedback History Section -->
+            <div class="history-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-history"></i> Your Feedback History</h2>
+                    <p>View your previously submitted feedback</p>
+                </div>
+                
+                <div class="history-container">
+                    <div id="loadingState" class="loading-state" style="display: none;">
+                        <div class="loading-spinner"></div>
+                        <p>Loading your feedback history...</p>
+                    </div>
+                    
+                    <div id="noFeedbackState" class="no-feedback-state" style="display: none;">
+                        <div class="no-feedback-icon">
+                            <i class="fas fa-comment-slash"></i>
+                        </div>
+                        <h3>No Feedback Yet</h3>
+                        <p>You haven't submitted any feedback yet. Share your thoughts with us!</p>
+                    </div>
+                    
+                    <div id="feedbackList" class="feedback-list">
+                        <!-- Feedback items will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Feedback Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Feedback Details</h2>
+                <span class="close" onclick="closeViewModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="viewContent">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <!-- Footer -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script src="/js/feedback.js"></script>
+</body>
+</html>

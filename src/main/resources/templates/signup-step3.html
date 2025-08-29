@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Sign Up – Step 3</title>
+
+    <link rel="stylesheet" th:href="@{/css/signup.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <!-- CSRF used by signup.js -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+    <script th:src="@{/js/signup.js}" defer></script>
+</head>
+<body>
+
+<main class="signup-shell" role="main">
+    <aside class="signup-side" aria-hidden="true">
+        <h2>Security setup</h2>
+        <p>Create credentials and security details to finish registration.</p>
+    </aside>
+
+    <section class="signup-main">
+        <div class="step-navigation" aria-label="Registration progress">
+            <button class="step-btn completed" data-step="1">Personal</button>
+            <button class="step-btn completed" data-step="2">Address</button>
+            <button class="step-btn active" data-step="3">Security</button>
+        </div>
+
+        <h1 class="signup-title">Create Credentials</h1>
+
+        <!-- IDs/names match signup.js -->
+        <form id="form-step3" class="signup-form" novalidate>
+            <div class="form-group">
+                <label for="username">Username <span class="required">*</span></label>
+                <input id="username" name="username" type="text" placeholder="Choose a username" required />
+                <div class="error" id="err-username"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password <span class="required">*</span></label>
+                <div class="password-input">
+                    <input id="password" name="password" type="password" placeholder="8-20 chars with upper, lower, digit, symbol" required />
+                    <button type="button" class="password-toggle" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="error" id="err-password"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
+                <div class="password-input">
+                    <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm your password" required />
+                    <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="error" id="err-confirmPassword"></div>
+            </div>
+
+            <!-- Security Questions (two selects, four options) -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="secQ1">Security Question 1 <span class="required">*</span></label>
+                    <select id="secQ1" name="secQ1" required>
+                        <option value="">Select a question</option>
+                        <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+                        <option value="What was your first school?">What was your first school?</option>
+                        <option value="In what city were you born?">In what city were you born?</option>
+                        <option value="What is your favorite teacher's name?">What is your favorite teacher's name?</option>
+                    </select>
+                    <input id="ans1" name="ans1" type="text" placeholder="Answer" required />
+                    <div class="error" id="err-secQ1"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="secQ2">Security Question 2 <span class="required">*</span></label>
+                    <select id="secQ2" name="secQ2" required>
+                        <option value="">Select a question</option>
+                        <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+                        <option value="What was your first school?">What was your first school?</option>
+                        <option value="In what city were you born?">In what city were you born?</option>
+                        <option value="What is your favorite teacher's name?">What is your favorite teacher's name?</option>
+                    </select>
+                    <input id="ans2" name="ans2" type="text" placeholder="Answer" required />
+                    <div class="error" id="err-secQ2"></div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" id="prev3" class="btn-secondary">Previous</button>
+                <button type="button" id="reset3" class="btn-secondary">Clear</button>
+                <button type="button" id="finish3" class="btn-primary">Create Account</button>
+            </div>
+
+            <div class="error" id="err-final"></div>
+            <div class="success-message" id="ok-final" style="display:none;">Registration successful.</div>
+        </form>
+    </section>
+</main>
+
+<!-- Success Popup Modal -->
+<div id="successModal" class="success-modal" style="display: none;">
+    <div class="success-modal-content">
+        <div class="success-icon">
+            <div class="checkmark-circle">
+                <div class="checkmark"></div>
+            </div>
+        </div>
+        <h2 class="success-title">Registration Successful!</h2>
+        <p class="success-message">Your account has been created successfully. You will be redirected to the login page shortly.</p>
+        <div class="success-loading">
+            <div class="loading-spinner"></div>
+            <span>Redirecting...</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

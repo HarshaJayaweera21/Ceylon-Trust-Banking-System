@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cashier Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf_param" th:content="${_csrf.parameterName}" />
+    <link rel="stylesheet" th:href="@{/css/cashier-dashboard.css(v=${#dates.createNow().time})}">
+    <link rel="stylesheet" th:href="@{/css/header.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" th:href="@{/css/footer.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- Welcome section -->
+<div class="welcome-section">
+    <div class="user-box">
+        <div class="user-icon">
+            <i class="fa-solid fa-cash-register"></i>
+        </div>
+        <i class="fa-solid fa-star fa-fade" style="color: #FFD43B;"></i>
+    </div>
+
+    <h1>
+        Welcome back,
+        <span style="color: #ffcc33;"
+              th:text="${cashier.firstName} + ' ' + ${cashier.lastName}">
+        </span> !
+    </h1>
+    <p th:text="${#dates.format(#dates.createNow(), 'EEEE, MMMM d, yyyy')} + ' • Cashier Dashboard'">
+         • Cashier Dashboard
+    </p>
+</div>
+
+<!-- Error Message -->
+<div th:if="${error}" class="error-message" style="background: #f8d7da; color: #721c24; padding: 15px; margin: 20px; border-radius: 8px; border: 1px solid #f5c6cb;">
+    <i class="fa-solid fa-exclamation-triangle"></i>
+    <span th:text="${error}">Error message</span>
+</div>
+
+<!-- Statistics Cards -->
+<div class="stats-section">
+    <div class="stats-container">
+        <div class="stat-card transactions-today">
+            <div class="stat-icon">
+                <i class="fa-solid fa-receipt"></i>
+            </div>
+            <div class="stat-content">
+                <h3 id="txnCount" th:text="${summary.transactionCount}">0</h3>
+                <p>Transactions Today</p>
+            </div>
+        </div>
+        
+        <div class="stat-card total-processed">
+            <div class="stat-icon">
+                <i class="fa-solid fa-sack-dollar"></i>
+            </div>
+            <div class="stat-content">
+                <h3>Rs. <span id="totalProcessed" th:text="${summary.totalAmount}">0.00</span></h3>
+                <p>Total Value Processed</p>
+            </div>
+        </div>
+        
+        <div class="stat-card pending-approvals">
+            <div class="stat-icon">
+                <i class="fa-solid fa-user-clock"></i>
+            </div>
+            <div class="stat-content">
+                <h3 id="pendingCount">0</h3>
+                <p>Pending Approvals</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Left Sidebar -->
+    <div class="left-sidebar">
+        <!-- Customer Search Panel -->
+        <div class="customer-search-panel">
+            <div class="panel-header">
+                <i class="fa-solid fa-search"></i>
+                <h2>Quick Customer Search</h2>
+            </div>
+            <div class="search-form">
+                <input type="text" id="customerSearchInput" placeholder="Enter NIC number to search customers..." />
+                <button id="searchCustomerBtn" class="search-btn">
+                    <i class="fa-solid fa-search"></i>
+                    Search
+                </button>
+            </div>
+            <div id="customerSearchResults" class="search-results" style="display: none;">
+                <!-- Customer search results will be populated here -->
+            </div>
+        </div>
+
+        <!-- Transaction Actions Panel -->
+        <div class="transaction-panel">
+            <div class="panel-header">
+                <i class="fa-solid fa-exchange-alt"></i>
+                <h2>Transaction Actions</h2>
+            </div>
+            <div class="transaction-actions">
+                <button class="action-btn deposit-btn" onclick="openTxnModal('DEPOSIT')">
+                    <i class="fa-solid fa-circle-arrow-down"></i>
+                    <span>Process Deposit</span>
+                </button>
+                <button class="action-btn withdrawal-btn" onclick="openTxnModal('WITHDRAWAL')">
+                    <i class="fa-solid fa-circle-arrow-up"></i>
+                    <span>Process Withdrawal</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Content Area -->
+    <div class="right-content">
+        <!-- Pending Approvals Section -->
+        <div class="approvals-section">
+            <div class="section-header">
+                <div class="header-left">
+                    <i class="fa-solid fa-user-check"></i>
+                    <h2>Pending Account Approvals</h2>
+                    <span class="approval-count" id="approvalCount">0 Pending</span>
+                </div>
+            </div>
+
+            <!-- Approvals Table -->
+            <div class="approvals-table-container">
+                <table id="approvalsTable" class="approvals-table">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Account No.</th>
+                            <th>Type</th>
+                            <th>Initial Deposit</th>
+                            <th>Requested</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="approvalsBody">
+                        <tr id="approvalsEmpty"><td colspan="6">No pending approvals</td></tr>
+                    </tbody>
+                </table>
+                
+                <div id="noApprovals" class="no-data" style="display: none;">
+                    <i class="fa-solid fa-check-circle"></i>
+                    <p>No pending approvals at the moment</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Transaction History Section -->
+    <div class="history-section">
+        <div class="section-header">
+            <div class="header-left">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <h2>Daily Transaction History</h2>
+                <span class="history-count" id="historyCount">0 Today</span>
+            </div>
+        </div>
+        
+        <div class="history-table-container">
+            <table id="historyTable" class="history-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Account(s)</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Reference</th>
+                        <th>Timestamp</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="historyBody">
+                    <tr id="historyEmpty"><td colspan="7">No transactions today</td></tr>
+                </tbody>
+            </table>
+            
+            <div id="noHistory" class="no-data" style="display: none;">
+                <i class="fa-solid fa-receipt"></i>
+                <p>No transactions processed today</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="overlay" class="overlay" aria-hidden="true"></div>
+
+    <div id="txnModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="txnTitle">
+        <div class="modal-content transaction-modal">
+            <div class="modal-header">
+                <div class="modal-icon" id="modalIcon">
+                    <i class="fa-solid fa-exchange-alt"></i>
+                </div>
+                <div class="modal-title-section">
+                    <h3 id="txnTitle">Transaction</h3>
+                    <p id="modalSubtitle">Process your transaction</p>
+                </div>
+                <button type="button" class="close" onclick="closeTxnModal()" aria-label="Close">&times;</button>
+            </div>
+            
+            <form id="txnForm" onsubmit="submitTxn(event)">
+                <input type="hidden" id="txnType" name="type" />
+                <div class="form-grid">
+                    <div class="form-group" id="srcGroup">
+                        <label for="srcAccount">
+                            <i class="fa-solid fa-credit-card"></i>
+                            Account Number
+                        </label>
+                        <input type="text" id="srcAccount" name="sourceAccountNumber" placeholder="e.g., SAV-12345678" required />
+                    </div>
+                    <div class="form-group" id="destGroup" style="display:none;">
+                        <label for="destAccount">
+                            <i class="fa-solid fa-arrow-right"></i>
+                            Destination Account
+                        </label>
+                        <input type="text" id="destAccount" name="destinationAccountNumber" placeholder="e.g., CUR-87654321" />
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">
+                            <i class="fa-solid fa-dollar-sign"></i>
+                            Amount (Rs.)
+                        </label>
+                        <input type="number" id="amount" name="amount" min="1" step="0.01" required />
+                    </div>
+                    <div class="form-group span-2">
+                        <label for="description">
+                            <i class="fa-solid fa-file-text"></i>
+                            Description (optional)
+                        </label>
+                        <input type="text" id="description" name="description" maxlength="200" placeholder="Enter transaction description..." />
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-cancel" onclick="closeTxnModal()">
+                        <i class="fa-solid fa-times"></i>
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-process" id="processBtn">
+                        <i class="fa-solid fa-check"></i>
+                        Process Transaction
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <!-- Custom Alert Modal -->
+    <div id="customAlertModal" class="modal">
+        <div class="modal-content alert-modal">
+            <div class="alert-header">
+                <i class="alert-icon"></i>
+                <h3 class="alert-title"></h3>
+            </div>
+            <div class="alert-body">
+                <p class="alert-message"></p>
+            </div>
+            <div class="alert-actions">
+                <button class="btn-alert-ok" onclick="closeCustomAlert()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="customConfirmModal" class="modal">
+        <div class="modal-content confirm-modal">
+            <div class="confirm-header">
+                <i class="confirm-icon"></i>
+                <h3 class="confirm-title"></h3>
+            </div>
+            <div class="confirm-body">
+                <p class="confirm-message"></p>
+            </div>
+            <div class="confirm-actions">
+                <button class="btn-confirm-cancel" onclick="closeCustomConfirm(false)">Cancel</button>
+                <button class="btn-confirm-ok" onclick="closeCustomConfirm(true)">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Details Modal -->
+    <div id="customerDetailsModal" class="modal">
+        <div class="modal-content">
+            <button type="button" class="close" onclick="closeCustomerModal()">&times;</button>
+            <h3>Customer Details</h3>
+            <div id="customerDetailsContent">
+                <!-- Customer details will be populated here -->
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+<script th:src="@{/js/header.js}" defer></script>
+<script th:src="@{/js/cashier-dashboard.js}" defer></script>
+</body>
+</html>
+
+

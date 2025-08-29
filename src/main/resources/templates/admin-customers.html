@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Customer Management - Admin Dashboard</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+    <link rel="shortcut icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+    
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf_param" th:content="${_csrf.parameterName}" />
+    <link rel="stylesheet" th:href="@{/css/admin-customers.css(v=${#dates.createNow().time})}">
+    <link rel="stylesheet" th:href="@{/css/header.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" th:href="@{/css/footer.css(v=${#dates.createNow().time})}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- Welcome section -->
+<div class="welcome-section">
+    <div class="user-box">
+        <div class="user-icon">
+            <i class="fa-solid fa-users"></i>
+        </div>
+        <i class="fa-solid fa-star fa-fade" style="color: #FFD43B;"></i>
+    </div>
+
+    <h1>
+        Customer Management
+        <span style="color: #ffcc33;">Dashboard</span>
+    </h1>
+    <p th:text="${#dates.format(#dates.createNow(), 'EEEE, MMMM d, yyyy')} + ' • Admin Dashboard'">
+        • Admin Dashboard
+    </p>
+</div>
+
+<!-- Statistics Cards -->
+<div class="stats-section">
+    <div class="stats-container">
+        <div class="stat-card total-customers">
+            <div class="stat-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <div class="stat-content">
+                <h3 th:text="${#lists.size(allCustomers)}">0</h3>
+                <p>Total Customers</p>
+            </div>
+        </div>
+        
+        <div class="stat-card active-customers">
+            <div class="stat-icon">
+                <i class="fa-solid fa-user-check"></i>
+            </div>
+            <div class="stat-content">
+                <h3 th:text="${#lists.size(allCustomers.?[isActive == true])}">0</h3>
+                <p>Active Customers</p>
+            </div>
+        </div>
+        
+        <div class="stat-card inactive-customers">
+            <div class="stat-icon">
+                <i class="fa-solid fa-user-slash"></i>
+            </div>
+            <div class="stat-content">
+                <h3 th:text="${#lists.size(allCustomers.?[isActive == false])}">0</h3>
+                <p>Inactive Customers</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Customer Search Panel -->
+    <div class="search-panel">
+        <div class="panel-header">
+            <i class="fa-solid fa-search"></i>
+            <h2>Customer Search & Filters</h2>
+        </div>
+        <form class="search-form" method="get" th:action="@{/admin/customers}">
+            <input type="text" id="search" name="q" placeholder="Search by username, name, or NIC..." th:value="${q}" />
+            <input type="hidden" name="hideInactive" th:value="${hideInactive}" />
+            <button type="submit" class="search-btn">
+                <i class="fa-solid fa-search"></i>
+                Search
+            </button>
+        </form>
+        <div class="filter-options">
+            <div class="checkbox-group">
+                <input type="checkbox" id="hideInactive" name="hideInactive" th:checked="${hideInactive}">
+                <label for="hideInactive">Hide inactive customers</label>
+            </div>
+            <button type="button" class="clear-btn" onclick="clearFilters()">
+                <i class="fa-solid fa-times"></i>
+                Reset
+            </button>
+        </div>
+    </div>
+
+    <!-- Customers Section -->
+    <div class="customers-section">
+        <div class="section-header">
+            <div class="header-left">
+                <i class="fa-solid fa-users"></i>
+                <h2>Customer Records</h2>
+                <span class="customer-count" th:text="${#lists.size(customers)} + ' Total'">0 Total</span>
+            </div>
+        </div>
+
+        <!-- Customers Table -->
+        <div class="customers-table-container">
+            <table id="customersTable" class="customers-table">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Username</th>
+                        <th>Full Name</th>
+                        <th>NIC</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="customersTableBody">
+                    <tr th:each="customer : ${customers}" th:if="${customers != null}">
+                        <td th:text="${customer.userId}">1</td>
+                        <td th:text="${customer.username}">john_doe</td>
+                        <td th:text="${customer.firstName + ' ' + customer.lastName}">John Doe</td>
+                        <td th:text="${customer.nic}">123456789V</td>
+                        <td>
+                            <span th:class="${customer.isActive} ? 'status-badge active' : 'status-badge inactive'" 
+                                  th:text="${customer.isActive} ? 'Active' : 'Inactive'">Active</span>
+                        </td>
+                        <td class="actions">
+                            <button class="action-btn view-btn" th:onclick="'viewCustomer(' + ${customer.userId} + ')'" title="View Details">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                            <th:block th:if="${customer.isActive}">
+                                <button class="action-btn deactivate-btn" th:onclick="'deactivateCustomer(' + ${customer.userId} + ')'" title="Deactivate">
+                                    <i class="fa-solid fa-user-times"></i>
+                                </button>
+                            </th:block>
+                            <th:block th:unless="${customer.isActive}">
+                                <button class="action-btn activate-btn" th:onclick="'activateCustomer(' + ${customer.userId} + ')'" title="Activate">
+                                    <i class="fa-solid fa-user-check"></i>
+                                </button>
+                            </th:block>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div id="noCustomers" th:if="${customers == null || #lists.isEmpty(customers)}" class="no-data">
+                <i class="fa-solid fa-users"></i>
+                <p>No customers found</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <!-- Customer View Modal -->
+        <div id="customerViewModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Customer Details</h3>
+                    <button type="button" class="close" onclick="closeCustomerModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="customerDetailsContent">
+                        <!-- Customer details will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- Custom Confirmation Modal -->
+<div id="confirmationModal" class="modal">
+    <div class="modal-content confirmation-modal">
+        <div class="confirmation-header">
+            <div class="confirmation-icon">
+                <i class="fa-solid fa-question-circle"></i>
+            </div>
+            <h3>Confirm Action</h3>
+        </div>
+        <div class="confirmation-body">
+            <p id="confirmationMessage">Are you sure you want to perform this action?</p>
+        </div>
+        <div class="confirmation-actions">
+            <button type="button" class="btn-cancel" onclick="closeConfirmationModal()">Cancel</button>
+            <button type="button" class="btn-confirm" id="confirmButton">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<div id="notification" class="notification"></div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/header.js}" defer></script>
+<script th:src="@{/js/admin-customers.js(v=${#dates.createNow().time})}" defer></script>
+</body>
+</html>
