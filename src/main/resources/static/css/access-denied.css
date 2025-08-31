@@ -1,0 +1,120 @@
+body {
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+.access-denied-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.access-denied-section {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 40px 30px;
+    text-align: center;
+    max-width: 600px;
+    margin: 50px auto;
+}
+
+.access-denied-icon {
+    font-size: 4em;
+    color: #ff6b6b;
+    margin-bottom: 20px;
+}
+
+.access-denied-section h2 {
+    color: #2b303b;
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.access-denied-section p {
+    font-size: 1.1em;
+    color: #6c7993;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.access-denied-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #0066cc;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+@media (max-width: 768px) {
+    .access-denied-container {
+        padding: 10px;
+    }
+    
+    .access-denied-section {
+        padding: 30px 20px;
+        margin: 20px auto;
+    }
+    
+    .access-denied-icon {
+        font-size: 3em;
+    }
+    
+    .access-denied-section h2 {
+        font-size: 2em;
+    }
+    
+    .access-denied-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn {
+        width: 100%;
+        max-width: 200px;
+        justify-content: center;
+    }
+}

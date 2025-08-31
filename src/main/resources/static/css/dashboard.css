@@ -1,0 +1,1283 @@
+
+/* Loan Application Section */
+.loan-application-section {
+    margin: 20px;
+    margin-bottom: 30px;
+}
+
+.loan-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.loan-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(255, 215, 0, 0.3);
+}
+
+.loan-content {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    color: white;
+}
+
+.loan-icon {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.loan-icon i {
+    font-size: 2.5em;
+    color: #fff;
+}
+
+.loan-text {
+    flex: 1;
+}
+
+.loan-text h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.8em;
+    font-weight: 600;
+    color: #fff;
+}
+
+.loan-text p {
+    margin: 0;
+    font-size: 1.1em;
+    opacity: 0.9;
+    line-height: 1.5;
+}
+
+.apply-loan-btn {
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.apply-loan-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.apply-loan-btn i {
+    font-size: 1.2em;
+}
+
+/* EMI Display Styles */
+.emi-display {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+}
+
+.emi-amount {
+    display: block;
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #28a745;
+    margin-bottom: 5px;
+}
+
+.emi-note {
+    color: #6c757d;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+/* Responsive Design for Loan Section */
+@media (max-width: 768px) {
+    .loan-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .loan-text h3 {
+        font-size: 1.5em;
+    }
+
+    .loan-text p {
+        font-size: 1em;
+    }
+
+    .apply-loan-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+
+
+/* General Styles */
+body {
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+    margin: 0;
+    padding: 0;
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+/* Prevent horizontal scroll globally */
+html, body { overflow-x: hidden; }
+body.no-scroll { overflow: hidden; }
+
+.user-box {
+    display: flex;
+    justify-content: center;  /* centers both icons horizontally */
+    align-items: center;      /* vertical alignment */
+    gap: 10px;                /* space between circle and star */
+    margin-bottom: 20px;      /* push icons down a bit */
+}
+
+.user-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-icon i {
+    font-size: 25px;
+    color: white;
+}
+
+.user-box i.fa-star {
+    font-size: 20px;   /* make star a bit smaller */
+}
+
+
+.welcome-section {
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 35%, #000000 100%);
+    color: white;
+    border-radius: 20px;
+    margin: 30px 20px;
+}
+
+.welcome-section h1 {
+    margin: 0;
+    /*font-size: 2.5em;*/
+    font-size: 48px;
+}
+
+.welcome-section p {
+    margin: 10px 0 0;
+    font-size: 1.2em;
+}
+
+/* Account Cards */
+.account-cards-container {
+    display: flex;
+    flex-wrap: wrap;         /* let cards wrap to new lines */
+    justify-content: flex-start; /* keep them left-aligned */
+    gap: 20px;
+    padding: 0 20px;
+    margin-bottom: 30px;
+    background: #1a1a1a;
+}
+
+/* Dashboard two-column layout */
+.dashboard-row {
+    display: grid;
+    grid-template-columns: 1fr 480px; /* cards | insights - further increased width */
+    gap: 20px;
+    align-items: start;
+    padding: 0 20px;
+}
+
+.cards-col { min-width: 0; }
+
+
+.insights-panel {
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.1);
+    padding: 20px;
+    /*min-height: 400px; !* Match account card height *!*/
+    width: 400px;
+    height: 270px;
+    display: flex;
+    flex-direction: column;
+    /*justify-content: center;*/
+    align-items: center;
+
+}
+
+.insights-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    margin-bottom: 15px;
+}
+
+.insights-header h3 {
+    flex: 1 0 100%;
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.legend-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+.legend-label {
+    margin-right: 16px;
+    color: #e6e6e6;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.legend-dot.deposit { background: #16A249; }
+.legend-dot.withdrawal { background: #F43E5C; }
+.legend-dot.transfer { background: #3281ED; }
+
+.insights-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    flex: 1;
+    height: 200px;
+    width: 200px;
+    /*min-height: 300px;*/
+}
+.insights-body canvas {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 350px;
+    max-height: 350px;
+}
+
+@media (max-width: 1100px) {
+    .dashboard-row { grid-template-columns: 1fr; }
+    .insights-panel { order: 2; }
+}
+
+.account-card {
+    flex: 0 0 auto;          /* don't grow or shrink automatically */
+    width: 350px;            /* fixed width, adjust as you like */
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: default;
+}
+
+
+.account-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+}
+
+.savings-theme {
+    border-left: 5px solid #ffd700; /* Gold for Savings */
+}
+
+.current-theme {
+    border-left: 5px solid #e6c200; /* Darker gold for Current */
+}
+
+
+.account-icon1 i {
+    font-size: 30px;    /* adjust size */
+    color: #ffd700;     /* gold color for savings */
+}
+
+.account-icon1 {
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.account-icon2 i {
+    font-size: 30px;    /* adjust size */
+    color: #e6c200;     /* darker gold color for current */
+}
+
+.account-icon2 {
+    background: rgba(230, 194, 0, 0.1);
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.status {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.8em;
+}
+
+.status-active {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+
+.card-header {
+    background: transparent;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1.5em;
+    color: #ffffff;
+}
+
+.card-body {
+    text-align: center;
+}
+
+.balance-p {
+    text-align: left;
+    color: #e6e6e6;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.balance-amount {
+    font-size: 2em;
+    text-align: left;
+    color: #ffffff;
+    margin: 10px 0;
+    font-weight: 600;
+}
+
+.account-number {
+    font-size: 1em;
+    color: #e6e6e6;
+    margin: 0;
+}
+
+.card-footer {
+    background-color: rgba(255, 215, 0, 0.05);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9em;
+    border-top: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.card-footer p {
+    font-weight: 500;
+    color: #e6e6e6;
+}
+
+.status-type {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1.0em;
+}
+
+.status-Active {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-Inactive {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+
+/* Add New Account Card */
+.add-account-card {
+    background: rgba(255, 215, 0, 0.1);
+    text-align: center;
+    width: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px dashed rgba(255, 215, 0, 0.3);
+}
+
+.add-account-card i {
+    color: #ffd700;
+    font-size: 2em;
+}
+
+.add-account-card p {
+    margin: 10px 0 0;
+    color: #ffd700;
+    font-weight: 600;
+}
+
+/* Transaction Section */
+
+.transaction-part {
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    margin: 30px 20px 0;
+}
+.transaction-section {
+    /*float: left;*/
+    background: rgba(255, 215, 0, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    width: 100%;
+    /*margin: 0 20px 30px;*/
+    /*max-width: 1200px; !* optional max width to prevent it being too wide *!*/
+    box-sizing: border-box;
+}
+
+.transaction-head {
+    display: flex;
+    align-items: center;
+    height: 25px;
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
+
+.transaction-head i {
+    font-size: 25px;
+    color: #ffd700;
+}
+
+.transaction-section h2 {
+    /*margin-top: 0;*/
+    margin-left: 15px;
+    color: #ffffff;
+}
+
+.transaction-total {
+    height: 25px;
+    padding: 0 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 12px;
+    margin-left: 10px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    color: #1a1a1a;
+    background-color: rgba(255, 215, 0, 0.2);
+}
+
+
+
+#transactionTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#transactionTable th, #transactionTable td {
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+    text-align: left;
+    color: #ffffff;
+}
+
+.table-type {
+    display: flex;
+    font-weight: 500;
+}
+
+
+#transactionTable th {
+    background: rgba(255, 215, 0, 0.1);
+    color: #ffffff;
+}
+
+#transactionTable i {
+    margin-right: 8px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 20px;
+    padding: 8px 0;
+}
+
+.pagination button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 32px;
+    justify-content: center;
+}
+
+.pagination .page-btn {
+    background: #f8f9fa;
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+}
+
+.pagination .page-btn:hover {
+    background: #e9ecef;
+    color: #495057;
+    border-color: #adb5bd;
+    transform: translateY(-1px);
+}
+
+.pagination .page-btn.active {
+    background: #ffd700;
+    color: #1a1a1a;
+    border-color: #ffd700;
+    box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+}
+
+.pagination .page-btn.active:hover {
+    background: #e6c200;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(255, 215, 0, 0.4);
+}
+
+.pagination .nav-btn {
+    background: #ffd700;
+    color: #1a1a1a;
+    border: 1px solid #ffd700;
+    font-weight: 600;
+}
+
+.pagination .nav-btn:hover {
+    background: #e6c200;
+    border-color: #e6c200;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
+}
+
+.pagination .nav-btn:disabled {
+    background: #e9ecef;
+    color: #adb5bd;
+    border-color: #dee2e6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.pagination .nav-btn:disabled:hover {
+    background: #e9ecef;
+    color: #adb5bd;
+    border-color: #dee2e6;
+    transform: none;
+    box-shadow: none;
+}
+
+.pagination .nav-btn i {
+    font-size: 10px;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto; /* only vertical if needed */
+    overflow-x: hidden; /* never horizontal */
+    background-color: rgba(0,0,0,0.4);
+    backdrop-filter: blur(5px); /* Glassy blurry background */
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #1a1a1a, #000000);
+    margin: 5% auto;
+    padding: 24px;
+    border-radius: 16px;
+    width: min(560px, 92vw);
+    max-height: 85vh;
+    overflow-y: auto; /* allow vertical scroll inside if needed */
+    overflow-x: hidden; /* prevent sideways scroll */
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    position: relative;
+    overscroll-behavior: contain; /* avoid body scroll chaining */
+}
+
+.close {
+    color: #ffd700;
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+}
+
+.close:hover {
+    color: #e6c200;
+}
+
+/* Form Styles (from open-account-form) */
+.open-account-form {
+    background-color: rgba(255, 215, 0, 0.05);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(255, 215, 0, 0.1);
+    padding: 30px;
+    margin: 20px 0;
+    text-align: center;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.open-account-form h3 {
+    color: #ffd700;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 16px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-size: 16px;
+    color: #ffffff;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.form-group i {
+    color: #ffd700;
+    margin-right: 8px;
+}
+
+.form-group select, .form-group input[type="text"], .form-group input[type="number"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 10px;
+    font-size: 16px;
+    background-color: rgba(255, 215, 0, 0.05);
+    color: #ffffff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Enhanced Select Dropdown Styling */
+.form-group select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffd700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+.form-group select:hover {
+    border-color: #ffd700;
+    background-color: rgba(255, 215, 0, 0.08);
+}
+
+.form-group select option {
+    background: #1a1a1a;
+    color: #ffffff;
+    padding: 8px 12px;
+}
+
+.form-group select option:hover {
+    background: rgba(255, 215, 0, 0.1);
+    color: #ffd700;
+}
+
+/* invalid state from JS */
+.form-group .invalid {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.form-group select:focus, .form-group input:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.15);
+}
+
+/* helper text */
+.helper {
+    display: block;
+    color: #e6e6e6;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+/* grid layout */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+/* Ensure form never overflows horizontally */
+#openAccountForm, .form-grid, .form-group, .form-actions {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.btn-secondary {
+    padding: 12px 18px;
+    background: #e5e7eb;
+    color: #111827;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background: #d1d5db;
+}
+
+.submit-btn {
+    padding: 12px 22px;
+    background: linear-gradient(135deg, #ffd700, #e6c200);
+    color: #1a1a1a;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.25);
+}
+
+.submit-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(255, 215, 0, 0.35);
+    background: linear-gradient(135deg, #e6c200, #cc9900);
+}
+
+.submit-btn i {
+    margin-right: 8px;
+}
+
+/* Spinner */
+.spinner {
+    text-align: center;
+    padding: 20px;
+    display: none;
+    color: #ffd700;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .account-cards-container {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome-section h1 {
+        font-size: 1.8em;
+    }
+
+    .balance-amount {
+        font-size: 1.8em;
+    }
+
+    .modal-content {
+        margin: 8% auto;
+        width: 94vw;
+        max-height: 86vh;
+    }
+}
+
+/* ... All previous styles remain ... */
+
+/* Transaction Section Updates */
+/*.transaction-section {*/
+/*    background: #f9f9f9;*/
+/*    border-radius: 15px;*/
+/*    padding: 20px;*/
+/*    margin: 0 auto 30px auto; !* Center if needed, but right-align with margin-left *!*/
+/*    width: 50%;*/
+/*    margin-left: auto; !* Align to right *!*/
+/*}*/
+
+#noTransactions {
+    text-align: center;
+    padding: 20px;
+    color: #e6e6e6;
+    font-size: 1.2em;
+}
+
+#noTransactions i {
+    margin-right: 8px;
+    color: #ffd700;
+}
+
+/* No Accounts Section */
+.no-accounts-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    padding: 40px 20px;
+    background: #1a1a1a;
+}
+
+.welcome-message {
+    text-align: center;
+    max-width: 600px;
+    padding: 60px 40px;
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.welcome-icon {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px;
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+    animation: float 3s ease-in-out infinite;
+}
+
+.welcome-icon i {
+    font-size: 48px;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.welcome-message h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0 0 20px 0;
+    background: linear-gradient(135deg, #2d3748, #4a5568);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.welcome-message p {
+    font-size: 1.2rem;
+    color: #4a5568;
+    line-height: 1.6;
+    margin: 0 0 40px 0;
+    font-weight: 400;
+}
+
+.open-account-btn {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #1a202c;
+    border: none;
+    padding: 18px 36px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.open-account-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s;
+}
+
+.open-account-btn:hover::before {
+    left: 100%;
+}
+
+.open-account-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(255, 215, 0, 0.6);
+    background: linear-gradient(135deg, #ffed4e, #ffd700);
+}
+
+.open-account-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+}
+
+.open-account-btn i {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.open-account-btn:hover i {
+    transform: rotate(90deg);
+}
+
+/* Media Queries: Stack on mobile */
+@media (max-width: 768px) {
+    .transaction-section {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .welcome-message {
+        padding: 40px 20px;
+        margin: 20px;
+    }
+
+    .welcome-message h2 {
+        font-size: 2rem;
+    }
+
+    .welcome-message p {
+        font-size: 1rem;
+    }
+
+    .open-account-btn {
+        padding: 15px 30px;
+        font-size: 1rem;
+    }
+
+    .welcome-icon {
+        width: 80px;
+        height: 80px;
+    }
+
+    .welcome-icon i {
+        font-size: 40px;
+    }
+}
+
+
+
+
+/* Loan Application Section */
+.loan-application-section {
+    margin: 20px;
+    margin-bottom: 30px;
+}
+
+.loan-container {
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 35%, #000000 100%);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.loan-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(255, 215, 0, 0.3);
+}
+
+.loan-content {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    color: white;
+}
+
+.loan-icon {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.loan-icon i {
+    font-size: 2.5em;
+    color: #fff;
+}
+
+.loan-text {
+    flex: 1;
+}
+
+.loan-text h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.8em;
+    font-weight: 600;
+    color: #fff;
+}
+
+.loan-text p {
+    margin: 0;
+    font-size: 1.1em;
+    opacity: 0.9;
+    line-height: 1.5;
+}
+
+.apply-loan-btn {
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.apply-loan-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.apply-loan-btn i {
+    font-size: 1.2em;
+}
+
+/* EMI Display Styles */
+.emi-display {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+}
+
+.emi-amount {
+    display: block;
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #28a745;
+    margin-bottom: 5px;
+}
+
+.emi-note {
+    color: #6c757d;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+/* Responsive Design for Loan Section */
+@media (max-width: 768px) {
+    .loan-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .loan-text h3 {
+        font-size: 1.5em;
+    }
+
+    .loan-text p {
+        font-size: 1em;
+    }
+
+    .apply-loan-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+
+/* Transfer Section Styles */
+.transfer-section {
+    margin: 30px 0;
+    padding: 0 20px;
+}
+
+.transfer-container {
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 35%, #000000 100%);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.transfer-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.transfer-icon {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.transfer-icon i {
+    font-size: 2.5em;
+    color: #fff;
+}
+
+.transfer-text {
+    flex: 1;
+    color: #fff;
+}
+
+.transfer-text h3 {
+    font-size: 1.8em;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.transfer-text p {
+    font-size: 1.1em;
+    margin: 0;
+    opacity: 0.9;
+    line-height: 1.5;
+}
+
+.transfer-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 15px 30px;
+    border-radius: 12px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.transfer-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.transfer-btn i {
+    font-size: 1.2em;
+}
+
+/* Responsive Design for Transfer Section */
+@media (max-width: 768px) {
+    .transfer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .transfer-text h3 {
+        font-size: 1.5em;
+    }
+
+    .transfer-text p {
+        font-size: 1em;
+    }
+
+    .transfer-btn {
+        padding: 12px 25px;
+        font-size: 1em;
+    }
+}
