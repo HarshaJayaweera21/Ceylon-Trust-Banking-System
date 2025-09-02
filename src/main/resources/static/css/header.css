@@ -1,0 +1,898 @@
+header {
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 35%, #1a1a1a 100%);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Header Right Section */
+.header-right-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    margin-left: auto;
+}
+
+/* Auth Buttons Row */
+.auth-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Bottom Row: Bell + Hamburger */
+.bottom-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Hamburger Menu */
+.hamburger-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 30px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), rgba(255, 215, 0, 0.02));
+    pointer-events: none;
+    z-index: 1;
+}
+
+header > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Hamburger Menu */
+.hamburger-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 30px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+}
+
+.hamburger-menu span {
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(135deg, #ffd700, #e6c200);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.hamburger-menu.active span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger-menu.active span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+.hamburger-menu.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-menu-overlay.active {
+    opacity: 1;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.logo .icon {
+    font-size: 28px;
+    color: #ffd700;
+    margin-right: 12px;
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo h1 {
+    margin: 0;
+    font-size: 26px;
+    color: #ffffff;
+    font-weight: 700;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    line-height: 1;
+}
+
+.logo p {
+    margin: 0;
+    font-size: 12px;
+    color: #ffd700;
+    opacity: 0.8;
+    line-height: 1;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100vh;
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 35%, #1a1a1a 100%);
+    transition: right 0.3s ease;
+    z-index: 999;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 215, 0, 0.3) transparent;
+    max-height: 100vh;
+    display: block;
+}
+
+.navbar-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 80px 30px 30px;
+    gap: 20px;
+    min-height: calc(100vh - 60px);
+    padding-bottom: 100px;
+}
+
+/* Custom scrollbar for webkit browsers */
+.navbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.navbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.navbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 215, 0, 0.3);
+    border-radius: 3px;
+}
+
+.navbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 215, 0, 0.5);
+}
+
+.navbar.active {
+    right: 0;
+}
+
+.nav-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 400;
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+    position: relative;
+    padding: 8px 16px;
+    border-radius: 25px;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+    border-radius: 25px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.nav-link:hover::before {
+    opacity: 1;
+}
+
+.nav-link:hover {
+    color: #ffd700;
+    transform: translateY(-2px);
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}
+
+.nav-link i {
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.auth-row .sign-in,
+.auth-row .sign-up {
+    padding: 8px 16px !important;
+    margin: 0 !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid transparent !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    opacity: 1 !important;
+    animation: fadeIn 0.5s forwards !important;
+    min-width: 100px !important;
+    justify-content: center !important;
+}
+
+.auth-row .sign-in {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #ffffff !important;
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+.auth-row .sign-in:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 215, 0, 0.5) !important;
+    color: #ffd700 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2) !important;
+}
+
+.auth-row .sign-up {
+    background: linear-gradient(135deg, #ffd700, #e6c200) !important;
+    color: #1a1a1a !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3) !important;
+}
+
+.auth-row .sign-up:hover {
+    background: linear-gradient(135deg, #e6c200, #cc9900) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4) !important;
+}
+
+.auth-buttons .sign-out {
+    padding: 12px 24px !important;
+    margin: 0 !important;
+    border-radius: 25px !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid transparent !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    opacity: 1 !important;
+    animation: fadeIn 0.5s forwards !important;
+    background: linear-gradient(135deg, #ffd700, #e6c200) !important;
+    color: #1a1a1a !important;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3) !important;
+}
+
+.auth-buttons .sign-out:hover {
+    background: linear-gradient(135deg, #e6c200, #cc9900) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4) !important;
+}
+
+.notification-bell {
+    position: relative;
+    color: #ffffff;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 8px;
+    border-radius: 8px;
+    background: none;
+    border: none;
+}
+
+.notification-bell:hover {
+    color: #ffd700;
+    background: rgba(255, 215, 0, 0.1);
+    transform: scale(1.1);
+}
+
+.notification-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+}
+
+.user-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.user-name {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.user-role {
+    color: #ffd700;
+    font-size: 12px;
+    margin: 0;
+    opacity: 0.8;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffd700, #e6c200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1a1a1a;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-avatar:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: linear-gradient(135deg, #1a1a1a, #000000);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    min-width: 180px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 215, 0, 0.1);
+    color: #ffd700;
+}
+
+.dropdown-item i {
+    font-size: 12px;
+    width: 16px;
+}
+
+/* Notification Popup */
+.notification-popup {
+    position: fixed !important;
+    top: 80px !important;
+    right: 20px !important;
+    background: linear-gradient(135deg, #1a1a1a, #000000) !important;
+    border: 1px solid rgba(255, 215, 0, 0.2) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+    width: 350px !important;
+    max-height: 400px !important;
+    overflow-y: auto !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateY(-10px) !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: blur(10px) !important;
+    z-index: 99999 !important;
+    display: none !important;
+}
+
+.notification-popup.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    display: block !important;
+}
+
+.notification-header {
+    padding: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-header h3 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.mark-all-read {
+    background: none;
+    border: none;
+    color: #ffd700;
+    font-size: 12px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.mark-all-read:hover {
+    color: #e6c200;
+}
+
+.notification-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    padding: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.notification-item:hover {
+    background: rgba(255, 215, 0, 0.05);
+}
+
+.notification-item.unread {
+    background: rgba(255, 215, 0, 0.08);
+    border-left: 3px solid #ffd700;
+}
+
+.notification-message {
+    color: #ffffff;
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    margin-right: 10px;
+}
+
+.notification-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #ffd700;
+}
+
+.notification-type {
+    background: linear-gradient(135deg, #ffd700, #e6c200);
+    color: #1a1a1a;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 10px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.notification-time {
+    opacity: 0.8;
+}
+
+.no-notifications {
+    padding: 40px 20px;
+    text-align: center;
+    color: #ffd700;
+}
+
+.no-notifications i {
+    font-size: 48px;
+    color: #ffd700;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.no-notifications p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* General Notification System - Used across all dashboards */
+.notification-popup {
+    position: fixed !important;
+    top: 80px !important;
+    right: 20px !important;
+    background: linear-gradient(135deg, #1a1a1a, #000000) !important;
+    border: 1px solid rgba(255, 215, 0, 0.2) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+    width: 350px !important;
+    max-height: 400px !important;
+    overflow-y: auto !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateY(-10px) !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: blur(10px) !important;
+    z-index: 99999 !important;
+}
+
+.notification-popup.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    display: block !important;
+}
+
+/* Legacy notification support for existing elements */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px 24px;
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    display: none;
+    z-index: 9999;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    min-width: 300px;
+    max-width: 500px;
+    width: auto;
+    text-align: center;
+    word-wrap: break-word;
+    line-height: 1.4;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease-in-out;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification.success {
+    background: linear-gradient(135deg, #ffd700, #e6c200);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.notification.error {
+    background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+/* Responsive Design for Notifications */
+@media (max-width: 768px) {
+    .notification-popup {
+        width: 300px !important;
+        right: 10px !important;
+        top: 70px !important;
+    }
+
+    .notification {
+        right: 10px;
+        top: 70px;
+        min-width: 250px;
+        max-width: 350px;
+        font-size: 13px;
+        padding: 12px 20px;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Navigation Link Styles */
+.nav-link {
+    font-size: 16px;
+    padding: 12px 16px;
+    width: 100%;
+    text-align: left;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+/* Navigation section separators for better organization */
+.navbar .nav-link:nth-of-type(3) {
+    margin-top: 15px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar .nav-link:nth-of-type(7) {
+    margin-top: 15px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar .nav-link:nth-of-type(11) {
+    margin-top: 15px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Auth Buttons in Mobile Menu */
+.auth-buttons {
+    gap: 15px;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.auth-buttons .sign-in,
+.auth-buttons .sign-up,
+.auth-buttons .sign-out {
+    padding: 12px 20px !important;
+    font-size: 14px !important;
+    width: 100%;
+    justify-content: center;
+}
+
+/* Sign Out Button inside hamburger menu */
+.sign-out-container {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 194, 255, 0.2);
+    width: 100%;
+    background: transparent;
+    padding-bottom: 20px;
+    min-height: auto;
+    display: flex;
+    align-items: center;
+}
+
+.sign-out-container .sign-out {
+    padding: 15px 25px !important;
+    margin: 0 !important;
+    border-radius: 25px !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid transparent !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    opacity: 1 !important;
+    background: linear-gradient(135deg, #ffd700, #e6c200) !important;
+    color: #1a1a1a !important;
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4) !important;
+    width: 100% !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.sign-out-container .sign-out:hover {
+    background: linear-gradient(135deg, #e6c200, #cc9900) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4) !important;
+}
+
+/* Pulsing animation for sign out button to make it more visible */
+.sign-out-container .sign-out {
+    animation: pulse-signout 2s infinite;
+}
+
+@keyframes pulse-signout {
+    0% {
+        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+    }
+    50% {
+        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.7);
+    }
+    100% {
+        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+    }
+}
+
+/* Ensure scrolling works properly */
+.navbar {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* Make sure the navbar content can scroll */
+.navbar-content {
+    box-sizing: border-box;
+}
+
+.authenticated-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;
+}
+
+/* Hide sign out button from main header since it's now in hamburger menu */
+.authenticated-buttons .sign-out {
+    display: none !important;
+}
+
+.notification-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.notification-bell {
+    font-size: 20px;
+    padding: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header {
+        padding: 15px 20px;
+    }
+
+    .logo h1 {
+        font-size: 22px;
+    }
+
+    .logo .icon {
+        font-size: 24px;
+    }
+
+    .user-info {
+        display: none;
+    }
+
+    .header-right-section {
+        gap: 6px;
+    }
+
+    .auth-row {
+        gap: 8px;
+    }
+
+    .bottom-row {
+        gap: 8px;
+    }
+
+    .auth-row .sign-in,
+    .auth-row .sign-up {
+        padding: 8px 14px !important;
+        font-size: 11px !important;
+        min-width: 90px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 12px 15px;
+    }
+
+    .navbar {
+        gap: 10px;
+        width: 260px;
+    }
+
+    .nav-link {
+        font-size: 13px;
+        padding: 5px 10px;
+    }
+
+    .auth-buttons .sign-in,
+    .auth-buttons .sign-up {
+        padding: 8px 12px !important;
+        font-size: 12px !important;
+    }
+
+    .logo h1 {
+        font-size: 20px;
+    }
+
+    .logo .icon {
+        font-size: 22px;
+    }
+
+    .sign-out-container .sign-out {
+        font-size: 14px !important;
+        padding: 12px 20px !important;
+    }
+}

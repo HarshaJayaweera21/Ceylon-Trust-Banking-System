@@ -1,0 +1,1020 @@
+/* Loan Officer Dashboard Styles - Matching Customer Service Dashboard Design */
+
+/* General Styles */
+body {
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+    margin: 0;
+    padding: 0;
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+/* Prevent horizontal scroll globally */
+html, body { overflow-x: hidden; }
+body.no-scroll { overflow: hidden; }
+
+/* Page Layout */
+.page {
+    min-height: 100vh;
+}
+
+/* Welcome Section */
+.user-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.user-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-icon i {
+    font-size: 25px;
+    color: white;
+}
+
+.user-box i.fa-star {
+    font-size: 20px;
+}
+
+.welcome-section {
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 35%, #000000 100%);
+    color: white;
+    border-radius: 20px;
+    margin: 30px 20px;
+}
+
+.welcome-section h1 {
+    margin: 0;
+    font-size: 48px;
+}
+
+.welcome-section p {
+    margin: 10px 0 0;
+    font-size: 1.2em;
+}
+
+/* Statistics Section */
+.stats-section {
+    margin: 20px;
+    margin-bottom: 30px;
+}
+
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.pending-applications .stat-icon {
+    background: linear-gradient(135deg, #ffd700, #e6c200);
+}
+
+.total-value .stat-icon {
+    background: linear-gradient(135deg, #cc9900, #b8860b);
+}
+
+.processed-today .stat-icon {
+    background: linear-gradient(135deg, #ffed4e, #ffd700);
+}
+
+.stat-content h3 {
+    margin: 0 0 4px 0;
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #2b303b;
+    line-height: 1;
+}
+
+.stat-content p {
+    margin: 0;
+    color: #6c7993;
+    font-weight: 500;
+}
+
+/* Main Content */
+.main-content {
+    margin: 20px;
+}
+
+/* Applications Section */
+.applications-section {
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.1);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+/* Loans Container - Side by Side Layout */
+.loans-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+/* Individual Loan Sections */
+.loans-section {
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.1);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Approved Section */
+.approved-section {
+    border-left: 4px solid #22c55e;
+}
+
+.approved-section .section-header {
+    background: linear-gradient(135deg, #ffd700, #e6c200);
+    color: #1a1a1a;
+}
+
+/* Rejected Section */
+.rejected-section {
+    border-left: 4px solid #ef4444;
+}
+
+.rejected-section .section-header {
+    background: linear-gradient(135deg, #ffd700, #e6c200);
+    color: #1a1a1a;
+}
+
+.section-header {
+    background: linear-gradient(135deg, #ffd700, #e6c200);
+    color: #1a1a1a;
+    padding: 24px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-left i {
+    font-size: 20px;
+    color: #1a1a1a;
+}
+
+.header-left h2 {
+    margin: 0;
+    color: #1a1a1a;
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+.application-count {
+    background: rgba(26, 26, 26, 0.2);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+    color: #1a1a1a;
+}
+
+/* Applications Table */
+.applications-table-container {
+    overflow-x: auto;
+    flex: 1;
+}
+
+/* Remove scrollbar for approved and rejected loans tables */
+.loans-section .applications-table-container {
+    overflow-x: visible;
+    overflow-y: visible;
+}
+
+/* Hide scrollbars completely for loans sections */
+.loans-section .applications-table-container::-webkit-scrollbar {
+    display: none;
+}
+
+.loans-section .applications-table-container {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.applications-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+/* Compact table styling for side-by-side layout */
+.loans-section .applications-table {
+    font-size: 0.85em;
+}
+
+.loans-section .applications-table th,
+.loans-section .applications-table td {
+    padding: 10px 8px;
+    white-space: nowrap;
+}
+
+.applications-table thead {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.applications-table th {
+    padding: 15px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #ffffff;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    white-space: nowrap;
+}
+
+.applications-table td {
+    padding: 15px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    vertical-align: middle;
+    color: #ffffff;
+}
+
+/* Specific styling for Actions column */
+.applications-table th:last-child,
+.applications-table td:last-child {
+    min-width: 280px;
+    width: 280px;
+    white-space: normal;
+}
+
+.applications-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.no-data {
+    text-align: center;
+    padding: 40px !important;
+}
+
+.no-data-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: #6c7993;
+}
+
+.no-data-content i {
+    font-size: 2em;
+    opacity: 0.5;
+}
+
+.no-data-content p {
+    margin: 0;
+    font-style: italic;
+}
+
+/* Status Badge */
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.status-approved {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.status-reviewed {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 6px;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.action-buttons .btn {
+    padding: 6px 10px;
+    font-size: 0.8em;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    min-width: 70px;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Compact buttons for side-by-side layout */
+.loans-section .action-buttons .btn {
+    padding: 6px 8px;
+    font-size: 0.75em;
+    min-width: 28px;
+}
+
+/* Text styling for manager approval note */
+.text-muted {
+    color: #6c7993;
+    font-size: 0.75em;
+    font-style: italic;
+    margin-top: 4px;
+    display: block;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+}
+
+.btn-info {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-info:hover {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 20px;
+    width: min(900px, 92vw);
+    max-height: 85vh;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3);
+    position: relative;
+    overscroll-behavior: contain;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.review-modal {
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%) !important;
+    overflow: hidden;
+    border-radius: 20px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.confirm-modal {
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%) !important;
+    overflow: hidden;
+    border-radius: 20px;
+    width: min(450px, 92vw);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+/* Modal Header */
+.modal-header {
+    background: linear-gradient(135deg, #ffd700, #e6c200);
+    color: #1a1a1a;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    flex-shrink: 0;
+}
+
+.modal-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(26, 26, 26, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(26, 26, 26, 0.3);
+}
+
+.modal-title-section h3 {
+    margin: 0 0 4px 0;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.modal-title-section p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.95em;
+}
+
+.close {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: rgba(26, 26, 26, 0.8);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.close:hover {
+    color: #1a1a1a;
+    background-color: rgba(26, 26, 26, 0.2);
+}
+
+/* Review Content */
+.review-content {
+    padding: 24px;
+    background-color: #1a1a1a !important;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0; /* Important for flex child scrolling */
+}
+
+/* Custom Scrollbar for Review Content */
+.review-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.review-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.review-content::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.review-content::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Ensure smooth scrolling */
+.review-content {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
+}
+
+.review-section {
+    margin-bottom: 24px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    border-left: 4px solid #ffd700;
+}
+
+.review-section h4 {
+    margin: 0 0 16px 0;
+    color: #ffffff;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.review-section h4 i {
+    color: #ffd700;
+}
+
+.review-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.review-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.review-item label {
+    font-weight: 600;
+    color: #6c7993;
+    font-size: 0.9em;
+}
+
+.review-item span {
+    color: #ffffff;
+    font-size: 1em;
+}
+
+.emi-highlight {
+    grid-column: span 2;
+    background: linear-gradient(135deg, #ffd700, #e6c200);
+    color: #1a1a1a;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.emi-highlight label {
+    color: rgba(26, 26, 26, 0.9);
+}
+
+.emi-highlight .emi-amount {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+/* Customer Info */
+.customer-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.customer-avatar {
+    flex-shrink: 0;
+}
+
+.customer-avatar i {
+    font-size: 4em;
+    color: #ffd700;
+}
+
+.customer-details h5 {
+    margin: 0 0 10px 0;
+    font-size: 1.3em;
+    color: #ffffff;
+}
+
+.customer-details p {
+    margin: 5px 0;
+    color: #6c7993;
+    font-size: 0.95em;
+}
+
+/* Documents List */
+.documents-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.document-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.document-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.document-item i {
+    color: #dc3545;
+    font-size: 1.5em;
+    flex-shrink: 0;
+}
+
+.document-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.document-name {
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 0.95em;
+}
+
+.document-details {
+    color: #6c7993;
+    font-size: 0.85em;
+    font-weight: 400;
+}
+
+.no-documents {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 30px;
+    color: #6c757d;
+    font-style: italic;
+    border: 2px dashed #dee2e6;
+    border-radius: 10px;
+    background: #f8f9fa;
+}
+
+.no-documents i {
+    font-size: 1.2em;
+    color: #adb5bd;
+}
+
+/* Comments Textarea */
+#officerComments {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.95em;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+    background: rgba(255, 215, 0, 0.05);
+    color: #ffffff;
+}
+
+#officerComments:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.1);
+    background: rgba(255, 215, 0, 0.08);
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: #1a1a1a !important;
+    flex-shrink: 0;
+    margin-top: auto;
+}
+
+.form-actions .btn {
+    padding: 12px 24px;
+    font-size: 0.95em;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.btn-cancel {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+
+.btn-process {
+    background: linear-gradient(135deg, #ffd700, #e6c200);
+    color: #1a1a1a;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+.btn-process:hover {
+    background: linear-gradient(135deg, #e6c200, #cc9900);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+}
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    color: white;
+    font-weight: 500;
+    z-index: 10000;
+    display: none;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.toast.show {
+    display: block;
+    animation: slideInRight 0.3s ease;
+}
+
+.toast.success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.toast.error {
+    background: linear-gradient(135deg, #dc3545, #e74c3c);
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .stats-container {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .welcome-section {
+        margin: 20px 10px;
+        padding: 20px;
+    }
+    
+    .welcome-section h1 {
+        font-size: 2em;
+    }
+    
+    .stats-section {
+        margin: 20px 10px;
+    }
+    
+    .stats-container {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .main-content {
+        margin: 20px 10px;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .header-left {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .action-buttons {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px;
+    }
+    
+    .action-buttons .btn {
+        flex: 1;
+        min-width: 60px;
+        justify-content: center;
+    }
+    
+    .review-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .emi-highlight {
+        grid-column: span 1;
+    }
+    
+    .customer-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .modal-content {
+        width: 98%;
+        margin: 1% auto;
+    }
+    
+    .review-content {
+        padding: 16px;
+        max-height: 60vh;
+    }
+    
+    /* Side-by-side layout becomes stacked on mobile */
+    .loans-container {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .loans-section .applications-table {
+        font-size: 0.8em;
+    }
+    
+    .loans-section .applications-table th,
+    .loans-section .applications-table td {
+        padding: 8px 6px;
+    }
+    
+    .loans-section .action-buttons .btn {
+        padding: 4px 6px;
+        font-size: 0.7em;
+        min-width: 24px;
+    }
+    
+    /* Adjust actions column width for mobile */
+    .applications-table th:last-child,
+    .applications-table td:last-child {
+        min-width: 200px;
+        width: 200px;
+    }
+    
+    .applications-table {
+        font-size: 0.85em;
+    }
+    
+    .applications-table th,
+    .applications-table td {
+        padding: 12px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-section {
+        padding: 16px;
+    }
+    
+    .welcome-section h1 {
+        font-size: 1.8em;
+    }
+    
+    .stat-card {
+        padding: 20px;
+    }
+    
+    .stat-icon {
+    width: 50px;
+    height: 50px;
+        font-size: 20px;
+    }
+    
+    .stat-content h3 {
+        font-size: 1.8em;
+    }
+    
+    .review-section {
+        padding: 16px;
+    }
+    
+    .customer-info {
+        padding: 16px;
+    }
+    
+    .modal-header {
+        padding: 20px;
+    }
+    
+    .review-content {
+        padding: 20px;
+    }
+    
+    .form-actions {
+        padding: 20px;
+    }
+}
