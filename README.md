@@ -27,7 +27,7 @@
 
 ## Overview
 
-Ceylon Bank is a web-based banking management system that simulates the core operations of a modern bank. The system supports six distinct user roles — each with a dedicated dashboard and access-controlled feature set — covering customer account management, loan processing, cashier operations, support ticketing, and full administrative oversight.
+Ceylon Bank is a web-based banking management system that simulates the core operations of a modern bank. The system supports six distinct user roles, each with a dedicated dashboard and access-controlled feature set covering customer account management, loan processing, cashier operations, support ticketing, and full administrative oversight.
 
 Developed as a **Year 2, Semester 1 group project**, this system demonstrates practical application of enterprise Java development: layered MVC architecture, Spring Security with role-based access control, JPA/Hibernate persistence, and intentional use of the **Singleton** and **Observer** design patterns.
 
@@ -51,9 +51,8 @@ Developed as a **Year 2, Semester 1 group project**, this system demonstrates pr
 
 ### 🏛️ Bank Manager
 - View system-wide dashboard with key metrics
-- Oversee customer accounts and balances
 - Monitor loan applications and approvals
-- Manage and moderate customer feedback
+- Assign roles to bank staff
 
 ### 🔍 Loan Officer
 - Review and process loan applications
@@ -114,15 +113,6 @@ Developed as a **Year 2, Semester 1 group project**, this system demonstrates pr
 |---|---|
 | Microsoft SQL Server Express | Primary relational database |
 | MSSQL JDBC Driver 9.4.0 | Java-to-SQL Server connectivity |
-| Hibernate ORM | JPA implementation with `SQLServerDialect` |
-
-### Build & Tools
-| Tool | Purpose |
-|---|---|
-| Apache Maven | Build and dependency management |
-| Spring Boot DevTools | Live reload during development |
-| IntelliJ IDEA | Primary IDE |
-| Git | Version control (feature-branch workflow) |
 
 ---
 
