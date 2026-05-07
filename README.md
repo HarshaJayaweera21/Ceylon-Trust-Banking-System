@@ -56,7 +56,7 @@ Developed as a **Year 2, Semester 1 group project**, this system demonstrates pr
 
 ### 🔍 Loan Officer
 - Review and process loan applications
-- Approve or reject loans with documented reasoning
+- Approve or reject loans
 - Access loan documents submitted by customers
 
 ### 🎧 Customer Service Executive
