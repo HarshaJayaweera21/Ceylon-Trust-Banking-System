@@ -97,14 +97,12 @@ Developed as a **Year 2, Semester 1 group project**, this system demonstrates pr
 | Spring MVC | Web layer (controllers, routing) |
 | Spring Data JPA / Hibernate | ORM and database access |
 | Spring Security | Authentication, authorisation, session management |
-| Spring Validation | Input validation |
-| Lombok | Boilerplate reduction |
+
 
 ### Frontend
 | Technology | Purpose |
 |---|---|
 | Thymeleaf | Server-side HTML templating |
-| Thymeleaf Spring Security 6 Extras | Role-based UI rendering |
 | Vanilla CSS | Custom per-page stylesheets |
 | Vanilla JavaScript | Client-side interactivity |
 
@@ -118,7 +116,7 @@ Developed as a **Year 2, Semester 1 group project**, this system demonstrates pr
 
 ## Design Patterns
 
-Two Gang-of-Four design patterns were intentionally implemented in this project:
+Two software design patterns were intentionally implemented in this project:
 
 ### 🔒 Singleton Pattern — `AuditLogger`
 
@@ -130,7 +128,6 @@ The `AuditLogger` is implemented as a thread-safe Singleton to provide a single,
 - **Private constructor** prevents external instantiation
 - **`volatile` static instance** ensures correct visibility across threads
 - **Double-Checked Locking** in `getInstance()` — checks `instance == null` twice (once outside and once inside a `synchronized` block) for performance without sacrificing thread safety
-- Spring's `@Autowired` injects the `AuditLogRepository` via a setter method, since the constructor is private
 
 **Why Singleton here?** Every controller across the system calls `AuditLogger.getInstance().logAction(...)` to record user actions (logins, logouts, transactions, etc.) into the database. Using a single shared instance ensures consistent logging behaviour, avoids redundant object creation, and makes the audit trail a reliable system-wide service.
 
@@ -144,7 +141,7 @@ AuditLogger.getInstance().logAction(userId, "LOGIN_SUCCESS", "User logged in fro
 
 **Location:** `src/main/java/.../observer/`
 
-The Observer Pattern powers the bank news notification system. When an admin or manager publishes a news article, all relevant users are automatically notified — without the news publisher needing to know anything about who the subscribers are.
+The Observer Pattern powers the bank news notification system. When an admin publishes a news article, all relevant users are automatically notified without the news publisher needing to know anything about who the subscribers are.
 
 **Structure:**
 
@@ -237,21 +234,6 @@ src/
 | ![Admin — Customer List](screenshots/admin-customers.png) | ![Admin — Staff List](screenshots/admin-staff-list.png) |
 | Customer Management | Staff Management |
 
-| | |
-|---|---|
-| ![News Admin](screenshots/news-admin.png) | ![FAQ Admin](screenshots/faq-admin.png) |
-| News Management | FAQ Management |
-
-| | |
-|---|---|
-| ![Feedback Admin](screenshots/feedback-admin.png) | |
-| Feedback Management | |
-
-### Public Pages
-| | |
-|---|---|
-| ![News Page](screenshots/news.png) | ![Contact Page](screenshots/contact.png) |
-| Bank News | Contact / Support |
 
 ---
 
@@ -271,8 +253,8 @@ Make sure the following are installed on your machine:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/ceylon-bank-web-system.git
-cd ceylon-bank-web-system
+git clone https://github.com/HarshaJayaweera21/Ceylon-Trust-Banking-System.git
+cd Ceylon-Trust-Banking-System
 ```
 
 ### 2. Set Up the Database
@@ -289,7 +271,7 @@ USE BankingSystemDB;
 CREATE USER bank_user FOR LOGIN bank_user;
 ALTER ROLE db_owner ADD MEMBER bank_user;
 ```
-4. Run the provided SQL schema scripts from the `/database` folder (if included) to set up tables
+4. Run the provided SQL schema scripts from the `/database` folder to set up tables
 
 ### 3. Configure the Application
 
@@ -318,21 +300,9 @@ http://localhost:8080
 
 ---
 
-### Default Credentials
-
-> ⚠️ Change these before any deployment.
-
-| Role | How to Access |
-|---|---|
-| Customer | Register via the Sign Up page |
-| All Staff Roles | Created by the System Administrator |
-| System Administrator | Created directly in the database with role `SystemAdministrator` |
-
----
-
 ## Team
 
-This system was designed and built as a **collaborative group project** for the Year 2, Semester 1 software engineering module. Responsibilities were divided across six feature branches — Account Management, Transaction Management, Loan Management, User Management, Bank Information System, and Customer Support Interface — each developed independently and merged into the main branch.
+This system was designed and built as a **collaborative group project** for the Year 2, Semester 1 software engineering module. Responsibilities were divided across six feature branches — Account Management, Transaction Management, Loan Management, User Management, Bank Information System, and Customer Support Interface — each developed independently.
 
 ---
 
